@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111111"><title>إدارة المتجر | معوض نصير</title>
+<style>
+:root{--bg:#101010;--panel:#191919;--gold:#d9b15c;--muted:#b7b7b7;--line:#343434}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f8f5ee;font-family:system-ui,Tahoma,Arial,sans-serif}header{padding:18px;text-align:center;background:linear-gradient(130deg,#302719,#101010);border-bottom:1px solid #6a5226}h1{margin:4px;color:var(--gold);font-size:25px}main{max-width:1000px;margin:auto;padding:16px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px;margin:12px 0}input,textarea,select{width:100%;padding:11px;margin:5px 0 10px;border:1px solid #444;border-radius:9px;background:#111;color:#fff;font:inherit}label{font-size:13px;color:#ddd}button{padding:10px 13px;border:0;border-radius:9px;background:var(--gold);font:inherit;font-weight:700;cursor:pointer;margin:3px}button.secondary{background:#303030;color:#fff;border:1px solid #444}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.item{border:1px solid var(--line);border-radius:12px;padding:12px;background:#141414}.item h3{margin:4px 0}.muted{color:var(--muted);font-size:13px}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}.hidden{display:none!important}.warn{background:#251e10;border:1px solid #6a5226;border-radius:10px;padding:12px;color:#f1dcae}.ok{color:#9fe0a9}.bad{color:#ffaaaa}.order{border-bottom:1px solid #333;padding:12px 0}.order textarea{min-height:60px}a{color:var(--gold)}
+</style>
+</head><body>
+<header><div>MAWAD NASEER STORE</div><h1>لوحة إدارة المتجر</h1><div class="muted">مخصصة لصاحب المتجر — إدارة الأصناف والطلبات</div></header>
+<main>
+<div class="warn">لا تضع كلمة مرور الإدارة داخل ملفات الموقع. أنشئ حسابًا في Firebase Authentication، ثم ضع UID الخاص به في ملف الإعدادات وقواعد Firestore. المنتجات مخصصة للأدوات والمستلزمات التجارية العامة فقط.</div>
+<section id="configWarning" class="panel hidden"><b>الإعداد غير مكتمل</b><p>عدّل ملف <code>firebase-config.js</code> وأضف بيانات مشروع Firebase وUID الإدارة، ثم انشر التغييرات.</p></section>
+<section id="loginPanel" class="panel">
+<h2>دخول الإدارة</h2><label>البريد الإلكتروني</label><input id="email" type="email" autocomplete="username" placeholder="بريد الإدارة">
+<label>كلمة المرور</label><input id="password" type="password" autocomplete="current-password" placeholder="كلمة مرور Firebase">
+<button id="loginBtn">تسجيل الدخول</button><button id="logoutBtn" class="secondary hidden">تسجيل الخروج</button><p id="authMsg" class="muted" role="status"></p>
+</section>
+<section id="appPanel" class="hidden">
+<div class="panel"><div class="row"><button id="productsTab">إدارة المنتجات</button><button id="ordersTab" class="secondary">الطلبات</button><a href="./" style="align-self:center">فتح المتجر</a></div></div>
+<section id="productsSection" class="panel">
+<h2 id="formTitle">إضافة منتج جديد</h2><input id="editId" type="hidden">
+<label>اسم المنتج</label><input id="name" maxlength="120" placeholder="اسم المنتج">
+<label>القسم</label><select id="category"><option>أدوات ومعدات</option><option>تعبئة وتغليف</option><option>مستلزمات عامة</option></select>
+<label>وصف المنتج</label><textarea id="description" maxlength="500" placeholder="وصف واضح للمنتج"></textarea>
+<div class="row"><div><label>السعر بالجنيه (اتركه صفرًا للسعر عند الاستفسار)</label><input id="price" type="number" min="0" step="0.01" value="0"></div><div><label>رابط صورة (اختياري)</label><input id="image" type="url" placeholder="https://..."></div></div>
+<div class="row"><button id="saveProduct">حفظ المنتج</button><button id="cancelEdit" class="secondary hidden">إلغاء التعديل</button></div><p id="productMsg" class="muted"></p>
+</section>
+<section id="productsListSection" class="panel"><h2>الأصناف الحالية</h2><div id="productList" class="grid"></div></section>
+<section id="ordersSection" class="panel hidden"><h2>طلبات العملاء</h2><p class="muted">السعر المعدل هنا سعر خاص لهذا الطلب فقط، ولا يغيّر سعر المنتج العام. تعديل السعر العام يتم من إدارة المنتجات.</p><div id="ordersList"></div></section>
+</section>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="./firebase-config.js"></script>
+<script>
+const $=id=>document.getElementById(id);let auth=null,db=null,user=null,productCache=[];
+const config=window.MNS_FIREBASE_CONFIG||{};
+const configured=config.apiKey&&!config.apiKey.includes('PASTE_')&&config.projectId&&!config.projectId.includes('PASTE_')&&window.MNS_ADMIN_UID&&!window.MNS_ADMIN_UID.includes('PASTE_');
+if(!configured){$('configWarning').classList.remove('hidden');$('loginBtn').disabled=true;$('authMsg').textContent='أكمل إعداد Firebase أولًا.'}
+else{firebase.initializeApp(config);auth=firebase.auth();db=firebase.firestore()}
+$('loginBtn').onclick=async()=>{if(!auth)return;try{const c=await auth.signInWithEmailAndPassword($('email').value.trim(),$('password').value);if(c.user.uid!==window.MNS_ADMIN_UID){await auth.signOut();$('authMsg').textContent='هذا الحساب ليس حساب الإدارة المصرّح به.';$('authMsg').className='bad';return}$('authMsg').textContent='تم تسجيل الدخول.';$('authMsg').className='ok'}catch(e){$('authMsg').textContent='تعذر تسجيل الدخول. راجع البريد وكلمة المرور وإعداد Firebase.';$('authMsg').className='bad'}};
+$('logoutBtn').onclick=()=>auth&&auth.signOut();
+if(auth)auth.onAuthStateChanged(async u=>{user=u;const allowed=!!u&&u.uid===window.MNS_ADMIN_UID;$('appPanel').classList.toggle('hidden',!allowed);$('logoutBtn').classList.toggle('hidden',!u);$('loginBtn').classList.toggle('hidden',!!u);if(u&&!allowed){$('authMsg').textContent='الحساب غير مصرح له بالإدارة.';await auth.signOut();return}if(allowed){await loadProducts();await loadOrders()}});
+async function loadProducts(){try{const snap=await db.collection('products').orderBy('name').get();productCache=snap.docs.map(d=>({id:d.id,...d.data()}));$('productList').innerHTML=productCache.map(p=>'<article class="item"><h3>'+esc(p.name||'منتج')+'</h3><div class="muted">'+esc(p.category||'')+'</div><p>'+esc(p.description||'')+'</p><b>'+((Number(p.price)>0)?Number(p.price).toLocaleString('ar-EG')+' ج.م':'السعر عند الاستفسار')+'</b><div><button onclick="editProduct(\''+p.id+'\')">تعديل</button><button class="secondary" onclick="deleteProduct(\''+p.id+'\')">حذف</button></div></article>').join('')||'<p class="muted">لا توجد منتجات بعد. أضف أول منتج من النموذج.</p>'}catch(e){$('productMsg').textContent='تعذر تحميل المنتجات. تحقق من قواعد Firestore.'}}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+window.editProduct=id=>{const p=productCache.find(x=>x.id===id);if(!p)return;$('editId').value=id;$('name').value=p.name||'';$('category').value=p.category||'مستلزمات عامة';$('description').value=p.description||'';$('price').value=Number(p.price)||0;$('image').value=p.image||'';$('formTitle').textContent='تعديل المنتج';$('cancelEdit').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})};
+function resetForm(){$('editId').value='';$('name').value='';$('category').value='أدوات ومعدات';$('description').value='';$('price').value='0';$('image').value='';$('formTitle').textContent='إضافة منتج جديد';$('cancelEdit').classList.add('hidden')}
+$('cancelEdit').onclick=resetForm;
+$('saveProduct').onclick=async()=>{if(!user||user.uid!==window.MNS_ADMIN_UID)return;const name=$('name').value.trim(),price=Number($('price').value);if(!name||!Number.isFinite(price)||price<0){$('productMsg').textContent='اكتب اسمًا صحيحًا وسعرًا غير سالب.';return}const data={name,category:$('category').value,description:$('description').value.trim(),price,image:$('image').value.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};try{const id=$('editId').value;if(id)await db.collection('products').doc(id).set(data,{merge:true});else await db.collection('products').doc(String(Date.now())).set({...data,createdAt:firebase.firestore.FieldValue.serverTimestamp()});$('productMsg').textContent='تم الحفظ. سيظهر المنتج في المتجر بعد تحديث الكتالوج.';$('productMsg').className='ok';resetForm();await loadProducts()}catch(e){$('productMsg').textContent='فشل الحفظ. تأكد من قواعد Firestore والاتصال.';$('productMsg').className='bad'}};
+window.deleteProduct=async id=>{if(!user||user.uid!==window.MNS_ADMIN_UID||!confirm('هل تريد حذف هذا المنتج؟'))return;try{await db.collection('products').doc(id).delete();await loadProducts()}catch(e){alert('تعذر الحذف. تحقق من الصلاحيات.')}};
+$('productsTab').onclick=()=>{ $('productsSection').classList.remove('hidden');$('productsListSection').classList.remove('hidden');$('ordersSection').classList.add('hidden')};
+$('ordersTab').onclick=()=>{ $('productsSection').classList.add('hidden');$('productsListSection').classList.add('hidden');$('ordersSection').classList.remove('hidden');loadOrders()};
+async function loadOrders(){if(!user||user.uid!==window.MNS_ADMIN_UID)return;try{const snap=await db.collection('orders').orderBy('createdAt','desc').limit(100).get();$('ordersList').innerHTML=snap.docs.map(d=>{const o=d.data();return '<article class="order"><b>طلب '+esc(d.id)+'</b><div class="muted">'+esc(o.buyer||'')+' — '+esc(o.phone||'')+' — '+(o.createdAt&&o.createdAt.toDate?o.createdAt.toDate().toLocaleString('ar-EG'):'وقت غير متاح')+'</div><p>'+esc((o.items||[]).map(i=>(i.name||'منتج')+' × '+i.qty+' — '+(i.unitPrice?'السعر المسجل '+i.unitPrice+' ج.م':'السعر عند الاستفسار')).join(' | '))+'</p><label>السعر النهائي لهذا الطلب (جنيه)</label><input id="price-'+d.id+'" type="number" min="0" step=".01" value="'+(Number(o.finalPrice)||'')+'" placeholder="اكتب السعر المتفق عليه"><label>الحالة</label><select id="status-'+d.id+'"><option value="new" '+(o.status==='new'?'selected':'')+'>جديد</option><option value="contacted" '+(o.status==='contacted'?'selected':'')+'>تم التواصل</option><option value="confirmed" '+(o.status==='confirmed'?'selected':'')+'>مؤكد</option><option value="completed" '+(o.status==='completed'?'selected':'')+'>مكتمل</option><option value="cancelled" '+(o.status==='cancelled'?'selected':'')+'>ملغي</option></select><button onclick="saveOrder(\''+d.id+'\')">حفظ السعر والحالة</button></article>'}).join('')||'<p class="muted">لا توجد طلبات مسجلة حتى الآن.</p>'}catch(e){$('ordersList').innerHTML='<p class="bad">تعذر تحميل الطلبات. تأكد من نشر قواعد Firestore.</p>'}}
+window.saveOrder=async id=>{if(!user||user.uid!==window.MNS_ADMIN_UID)return;const raw=$('price-'+id).value;const finalPrice=raw===''?null:Number(raw);if(finalPrice!==null&&(!Number.isFinite(finalPrice)||finalPrice<0)){alert('اكتب سعرًا صحيحًا.');return}try{await db.collection('orders').doc(id).update({finalPrice,status:$('status-'+id).value,adminUpdatedAt:firebase.firestore.FieldValue.serverTimestamp()});alert('تم حفظ سعر الطلب وحالته.');await loadOrders()}catch(e){alert('تعذر حفظ التعديل. راجع قواعد Firestore.')}};
+</script></body></html>
