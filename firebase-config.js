@@ -12,4 +12,4 @@ window.MNS_FIREBASE_CONFIG = {
 
 // بعد إنشاء حساب الإدارة في Firebase Authentication، ضع UID الخاص به هنا.
 // لا تضع البريد أو كلمة المرور في هذا الملف.
-window.MNS_ADMIN_UID = "PASTE_ADMIN_UID_HERE";
+window.MNS_ADMIN_UID = "i4b4t4fJn8VQ23Fp5VH2wjiNepOz1";
