@@ -13,3 +13,6 @@ window.MNS_FIREBASE_CONFIG = {
 // UID حساب الإدارة المعتمد في Firebase Authentication.
 // يجب أن يطابق UID نفسه الموجود في firestore.rules. لا تضع كلمة مرور هنا.
 window.MNS_ADMIN_UID = "i4tb4fJn8VQ23Fp5VH2wjiNepOz1";
+
+// رقم واتساب المتجر لتلقي البلاغات واستفسارات متابعة الطلبات، بصيغة دولية بدون +.
+window.MNS_STORE_WHATSAPP = "201067046324";
