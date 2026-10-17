@@ -24,12 +24,18 @@ service cloud.firestore {
         && request.resource.data.buyer.size() <= 120
         && request.resource.data.phone is string
         && request.resource.data.phone.size() <= 40
-        && request.resource.data.locationLat is number
-        && request.resource.data.locationLat >= -90
-        && request.resource.data.locationLat <= 90
-        && request.resource.data.locationLng is number
-        && request.resource.data.locationLng >= -180
-        && request.resource.data.locationLng <= 180
+        && (
+          !('locationLat' in request.resource.data)
+          || (request.resource.data.locationLat is number
+              && request.resource.data.locationLat >= -90
+              && request.resource.data.locationLat <= 90)
+        )
+        && (
+          !('locationLng' in request.resource.data)
+          || (request.resource.data.locationLng is number
+              && request.resource.data.locationLng >= -180
+              && request.resource.data.locationLng <= 180)
+        )
         && request.resource.data.items is list
         && request.resource.data.items.size() > 0
         && request.resource.data.items.size() <= 50
