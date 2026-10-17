@@ -64,7 +64,7 @@ footer{border-top-color:#2d302b;padding:23px 15px 90px}
 
 </style></head>
 <body>
-<header><div class="brand-row"><div class="brand-mark" aria-label="شعار معوض نصير">MN</div><div class="brand-copy"><div class="logo">MAWAD NASEER STORE</div><h1>معوض نصير</h1><p>وجهتك المميزة لتجارة الجملة</p></div></div><button id="installBtn" class="secondary" style="display:none;margin-top:14px">تثبيت المتجر على الموبايل</button></header>
+<header><div class="brand-row"><div class="brand-mark" aria-label="شعار معوض نصير">MN</div><div class="brand-copy"><div class="logo">MAWAD NASEER STORE</div><h1>معوض نصير</h1><p>وجهتك المميزة لتجارة الجملة</p></div></div><button id="installBtn" class="secondary" style="display:none;margin-top:14px">تثبيت المتجر على الموبايل</button><button id="enableNotificationsBtn" class="secondary" style="margin-top:10px">🔔 تفعيل إشعارات المنتجات والأسعار</button><p id="pushMsg" class="empty" role="status">الإشعارات اختيارية وتعمل على الأجهزة والمتصفحات المدعومة بعد السماح بها.</p></header>
 <main>
 <div class="notice">نسخة تجريبية للعرض. الأصناف والأسعار أمثلة عامة قابلة للتعديل؛ راجع الأسعار والتوفر مع المتجر قبل تأكيد الطلب.</div>
 <section id="homeView">
@@ -86,12 +86,15 @@ footer{border-top-color:#2d302b;padding:23px 15px 90px}
 </main><button class="cart-float" onclick="goToCart()">🛒 سلة الطلب <span id="cartCount">0</span></button><footer>معوض نصير · تجربة شراء جملة أسهل</footer>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
 <script src="./firebase-config.js"></script>
 <script>
-let firestoreDb=null;
+let firestoreDb=null, customerAuth=null, pushMessaging=null;
 const firebaseConfig=window.MNS_FIREBASE_CONFIG||{};
 const firebaseReady=!!(firebaseConfig.apiKey&&!firebaseConfig.apiKey.includes("PASTE_")&&firebaseConfig.projectId&&!firebaseConfig.projectId.includes("PASTE_"));
-if(firebaseReady){try{firebase.initializeApp(firebaseConfig);firestoreDb=firebase.firestore()}catch(e){console.warn("Firebase initialization failed",e)}}
+if(firebaseReady){try{if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);firestoreDb=firebase.firestore();customerAuth=firebase.auth();if(firebase.messaging&&firebase.messaging.isSupported())pushMessaging=firebase.messaging()}catch(e){console.warn("Firebase initialization failed",e)}}
 let productsData=[
 {id:1,name:"خامات غذائية متنوعة",cat:"خامات غذائية ومشروبات",desc:"أضف المواصفات ودرجة الاستخدام الغذائي قبل اعتماد الصنف",price:0},
 {id:2,name:"مكونات مشروبات غذائية",cat:"خامات غذائية ومشروبات",desc:"النوع والعبوة والسعر يحدّدها المتجر",price:0},
@@ -122,4 +125,24 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.a
 document.getElementById('search').addEventListener('input',renderProducts);document.getElementById('homeSearch').addEventListener('input',function(){const q=this.value.trim();if(!q)return;activeCategory='الكل';favoritesOnly=false;document.getElementById('homeView').classList.add('hidden');document.getElementById('catalogView').classList.remove('hidden');document.getElementById('catalogTitle').textContent='نتائج البحث';document.getElementById('search').value=q;renderProducts()});renderCart();
 function loadSharedProducts(){if(!firestoreDb)return;firestoreDb.collection('products').onSnapshot(snap=>{const live=snap.docs.map(d=>{const x=d.data();return {id:Number(d.id)||Number(x.id)||0,name:String(x.name||''),cat:String(x.category||'مستلزمات استيراد وجملة'),desc:String(x.description||''),price:Number(x.price)||0,image:String(x.image||'')}}).filter(p=>p.id&&p.name);productsData.splice(0,productsData.length,...live);favorites=favorites.filter(id=>productsData.some(p=>p.id===id));renderProducts();renderCart()},e=>console.warn('Could not load shared products',e))}
 loadSharedProducts();
+
+async function enableProductNotifications(){
+ const btn=document.getElementById('enableNotificationsBtn'),msg=document.getElementById('pushMsg');
+ if(!('Notification' in window)||!pushMessaging||!customerAuth||!firestoreDb){msg.textContent='الإشعارات غير مدعومة في هذا المتصفح أو إعداد Firebase غير مكتمل.';return}
+ if(!window.MNS_VAPID_KEY||window.MNS_VAPID_KEY.includes('PASTE_')){msg.textContent='يلزم إعداد مفتاح Web Push في Firebase أولًا قبل تفعيل الإشعارات.';return}
+ btn.disabled=true;msg.textContent='جارٍ تفعيل الإشعارات…';
+ try{
+  const permission=await Notification.requestPermission();
+  if(permission!=='granted'){msg.textContent='لم تسمح بالإشعارات. يمكنك تفعيلها من إعدادات المتصفح لاحقًا.';return}
+  let user=customerAuth.currentUser;
+  if(!user){const cred=await customerAuth.signInAnonymously();user=cred.user}
+  const token=await pushMessaging.getToken({vapidKey:window.MNS_VAPID_KEY,serviceWorkerRegistration:await navigator.serviceWorker.ready});
+  if(!token)throw new Error('لم يصدر المتصفح رمز الإشعارات');
+  await firestoreDb.collection('pushTokens').doc(user.uid).set({token,platform:'web',updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+  msg.textContent='تم تفعيل الإشعارات على هذا الجهاز. ستصلك التنبيهات عند دعم المتصفح لها.';
+ }catch(e){console.error('Push setup failed',e);msg.textContent='تعذر التفعيل. تأكد من إعداد Firebase ومفتاح Web Push وتفعيل تسجيل الدخول المجهول.'}
+ finally{btn.disabled=false}
+}
+document.getElementById('enableNotificationsBtn').addEventListener('click',enableProductNotifications);
+
 </script></body></html>
