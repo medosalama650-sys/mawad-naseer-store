@@ -48,6 +48,18 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
+    // سجل متابعة محدود: قراءة مستند واحد برقم طلب عشوائي، بلا بيانات شخصية.
+    match /tracking/{orderCode} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if request.resource.data.keys().hasOnly(['status','orderCode','createdAt','updatedAt'])
+        && request.resource.data.status == 'new'
+        && request.resource.data.orderCode == orderCode
+        && request.resource.data.createdAt is timestamp
+        && request.resource.data.updatedAt is timestamp;
+      allow update, delete: if isAdmin();
+    }
+
     // يمنع الوصول لأي مجموعة أخرى افتراضيًا.
     match /{document=**} {
       allow read, write: if false;
