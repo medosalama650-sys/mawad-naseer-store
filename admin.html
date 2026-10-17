@@ -38,7 +38,7 @@ a{color:#f0d58f}
 <section id="loginPanel" class="panel">
 <h2>دخول الإدارة</h2><label>البريد الإلكتروني</label><input id="email" type="email" autocomplete="username" placeholder="بريد الإدارة">
 <label>كلمة المرور</label><input id="password" type="password" autocomplete="current-password" placeholder="كلمة مرور Firebase">
-<button id="loginBtn">تسجيل الدخول</button><button id="resetPasswordBtn" class="secondary" type="button">نسيت كلمة المرور؟ إرسال رابط إعادة التعيين</button><button id="logoutBtn" class="secondary hidden">تسجيل الخروج</button><p id="authMsg" class="muted" role="status"></p>
+<button id="loginBtn" type="button" onclick="document.getElementById(\'authMsg\').textContent=\'تم الضغط على تسجيل الدخول؛ جارٍ فحص الاتصال…\';document.getElementById(\'authMsg\').className=\'muted\'">تسجيل الدخول</button><button id="resetPasswordBtn" type="button" style="background:#e8c36b;color:#17170f;border:2px solid #fff0b0" onclick="document.getElementById(\'authMsg\').textContent=\'تم الضغط على إعادة التعيين؛ جارٍ فحص الاتصال…\';document.getElementById(\'authMsg\').className=\'muted\'">نسيت كلمة المرور؟ إرسال رابط إعادة التعيين</button><button id="logoutBtn" class="secondary hidden">تسجيل الخروج</button><p id="authMsg" class="muted" role="status"></p>
 </section>
 <section id="appPanel" class="hidden">
 <div class="panel"><div class="row"><button id="productsTab">إدارة المنتجات</button><button id="ordersTab" class="secondary">الطلبات</button><a href="./" style="align-self:center">فتح المتجر</a></div></div>
@@ -57,7 +57,7 @@ a{color:#f0d58f}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="./firebase-config.js?v=10"></script>
+<script src="./firebase-config.js?v=11"></script>
 <script>
 const $=id=>document.getElementById(id);let auth=null,db=null,user=null,productCache=[];
 const config=window.MNS_FIREBASE_CONFIG||{};
