@@ -10,6 +10,9 @@ service cloud.firestore {
     match /products/{productId} {
       allow read: if true;
       allow create, update, delete: if isAdmin();
+      match /priceHistory/{historyId} {
+        allow read, create, update, delete: if isAdmin();
+      }
     }
 
     // العميل يستطيع إرسال طلب جديد فقط؛ لا يستطيع قراءته أو تغييره.
@@ -23,7 +26,9 @@ service cloud.firestore {
         && request.resource.data.buyer.size() > 0
         && request.resource.data.buyer.size() <= 120
         && request.resource.data.phone is string
+        && request.resource.data.phone.size() > 0
         && request.resource.data.phone.size() <= 40
+        && (!('phone2' in request.resource.data) || (request.resource.data.phone2 is string && request.resource.data.phone2.size() <= 40))
         && (
           !('locationLat' in request.resource.data)
           || (request.resource.data.locationLat is number
