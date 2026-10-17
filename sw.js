@@ -1,4 +1,4 @@
-const CACHE_NAME = "mawad-naseer-store-v14";
+const CACHE_NAME = "mawad-naseer-store-v15";
 const APP_FILES = ["./", "./index.html", "./manifest.json", "./icon.svg", "./admin.html", "./firebase-config.js", "./offline.html", "./privacy.html", "./terms.html", "./404.html"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES)).then(() => self.skipWaiting()));
@@ -10,7 +10,7 @@ self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
-  const freshFiles = url.pathname.endsWith("/admin.html") || url.pathname.endsWith("/firebase-config.js") || url.pathname.endsWith("/sw.js");
+  const freshFiles = url.pathname.endsWith("/admin.html") || url.pathname.endsWith("/firebase-config.js") || url.pathname.endsWith("/sw.js") || url.pathname.endsWith("/index.html");
   if (freshFiles) {
     event.respondWith(fetch(event.request, { cache: "no-store" }).then(response => {
       if (response && response.ok) caches.open(CACHE_NAME).then(cache => cache.put(event.request, response.clone()));
