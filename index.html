@@ -112,6 +112,28 @@ footer{line-height:2;padding-bottom:calc(26px + env(safe-area-inset-bottom))}
 @media(min-width:980px){.products{grid-template-columns:repeat(4,minmax(0,1fr))}.categories{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:340px){main{padding-inline:8px}.products{gap:7px}.product{padding:8px}.product h3{font-size:13px}.product-actions{grid-template-columns:minmax(0,1fr) 34px;gap:4px}.product-actions .fav{width:34px}.category-card{grid-template-columns:40px minmax(0,1fr) auto;padding:10px}.category-card .symbol{width:38px;height:38px}}
 
+
+/* Catalog redesign: real shopping flow and spacious product rows on phones */
+.categories{grid-template-columns:1fr;gap:12px}
+.category-card{min-height:88px;padding:14px 15px;grid-template-columns:48px minmax(0,1fr) auto;column-gap:12px}
+.category-card .symbol{width:46px;height:46px}
+.category-card strong{font-size:15px}
+.category-card small{font-size:12px}
+.products{grid-template-columns:minmax(0,1fr);gap:10px}
+.product{display:grid;grid-template-columns:108px minmax(0,1fr);grid-template-rows:auto auto auto 1fr auto;column-gap:13px;row-gap:2px;padding:11px;align-items:start;min-height:142px}
+.product img{grid-column:1;grid-row:1 / span 5;aspect-ratio:1/1;align-self:center;object-fit:contain!important;background:#0d110d!important}
+.product .tag{grid-column:2;grid-row:1;font-size:11px;margin:0}
+.product h3{grid-column:2;grid-row:2;font-size:15px;margin:3px 0;line-height:1.5}
+.product p{grid-column:2;grid-row:3;font-size:12px;line-height:1.55;margin:0;min-height:0}
+.product .price{grid-column:2;grid-row:4;margin:5px 0;font-size:14px}
+.product-actions{grid-column:2;grid-row:5;grid-template-columns:minmax(0,1fr) 38px;gap:6px;width:100%;margin-top:5px}
+.product-actions button{padding:8px 5px;font-size:12px;white-space:nowrap}
+.product-actions .fav{width:38px}
+#checkoutView{margin-top:12px}
+@media(max-width:360px){.product{grid-template-columns:88px minmax(0,1fr);column-gap:9px;padding:9px}.product h3{font-size:14px}.product p{font-size:11px}.product-actions{grid-template-columns:minmax(0,1fr) 34px}.product-actions .fav{width:34px}.category-card{grid-template-columns:42px minmax(0,1fr);grid-template-rows:auto auto auto}.category-card .symbol{grid-column:1;grid-row:1 / span 2;width:40px;height:40px}.category-card strong,.category-card small{grid-column:2}.arrow{grid-column:2;grid-row:3;margin-top:3px}}
+@media(min-width:680px){.categories{grid-template-columns:repeat(2,minmax(0,1fr))}.products{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.product{display:flex;flex-direction:column;min-height:0;padding:14px;gap:2px}.product img{width:100%;aspect-ratio:1/1;object-fit:contain!important}.product .tag,.product h3,.product p,.product .price,.product-actions{width:100%;grid-column:auto;grid-row:auto}.product h3{font-size:16px}.product p{font-size:13px}.product-actions{grid-template-columns:minmax(0,1fr) 42px;margin-top:auto}.product-actions .fav{width:42px}}
+@media(min-width:980px){.products{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
 </style></head>
 <body>
 <header><div class="brand-row"><div class="brand-mark" aria-label="شعار معوض نصير">MN</div><div class="brand-copy"><div class="logo">MAWAD NASEER STORE</div><h1>معوض نصير</h1><p>وجهتك المميزة لتجارة الجملة</p></div></div><button id="installBtn" class="secondary" style="display:none;margin-top:14px">تثبيت المتجر على الموبايل</button><button id="enableNotificationsBtn" class="secondary" style="margin-top:10px">🔔 تفعيل إشعارات المنتجات والأسعار</button><p id="pushMsg" class="empty" role="status">الإشعارات اختيارية وتعمل على الأجهزة والمتصفحات المدعومة بعد السماح بها.</p></header>
@@ -131,7 +153,7 @@ footer{line-height:2;padding-bottom:calc(26px + env(safe-area-inset-bottom))}
 <div class="toolbar"><input id="search" placeholder="ابحث داخل القسم..." aria-label="بحث داخل القسم"><button class="secondary" onclick="showHome()">كل الأقسام</button></div><div class="quick-tools"><button class="secondary" id="favFilter" onclick="toggleFavoritesOnly()">♡ أصنافي المفضلة</button><button class="secondary" onclick="clearSearch()">مسح البحث</button></div>
 <div class="products" id="products"></div>
 </section>
-<div class="layout"><section class="panel"><h2>🛒 سلة الطلب</h2><div id="cart"><p class="empty">السلة فارغة حاليًا.</p></div><div class="total"><span>الإجمالي التقديري</span><span id="total">يُحدد بعد تأكيد الأسعار</span></div><button class="secondary full" onclick="clearCart()">إفراغ السلة</button></section>
+<div class="backrow"><button class="secondary" onclick="returnFromCheckout()">→ متابعة التسوق</button><h2>إتمام الطلب</h2></div><div class="layout hidden" id="checkoutView"><section class="panel"><h2>🛒 سلة الطلب</h2><div id="cart"><p class="empty">السلة فارغة حاليًا.</p></div><div class="total"><span>الإجمالي التقديري</span><span id="total">يُحدد بعد تأكيد الأسعار</span></div><button class="secondary full" onclick="clearCart()">إفراغ السلة</button></section>
 <section class="panel"><h2>بيانات التاجر</h2><label for="buyer">اسم التاجر / الشركة</label><input id="buyer" placeholder="اكتب الاسم"><label for="phone">رقم هاتفك</label><input id="phone" inputmode="tel" autocomplete="tel" placeholder="01xxxxxxxxx"><button type="button" id="getLocationBtn" class="secondary full" onclick="getCustomerLocation()">📍 تحديد موقعي الحالي (إجباري)</button><p id="locationStatus" class="empty" role="status">لازم تحدد موقعك قبل إرسال الطلب.</p><label for="wa">رقم واتساب المتجر (مفتاح مصر 20 ثم الرقم)</label><input id="wa" inputmode="numeric" placeholder="201xxxxxxxxx"><label for="notes">ملاحظات الطلب</label><textarea id="notes" rows="3" placeholder="الكمية أو تفاصيل التوصيل"></textarea><button class="full" onclick="sendOrder()">تجهيز الطلب عبر واتساب</button><p class="empty">راجع تفاصيل الطلب في واتساب قبل إرساله. لن يُرسل تلقائيًا.</p></section></div>
 </main><button class="cart-float" onclick="goToCart()">🛒 سلة الطلب <span id="cartCount">0</span></button><footer style="padding:18px 14px;text-align:center;color:#b7b7b7;font-size:12px">معوض نصير · تجربة شراء جملة أسهل<br><a href="./privacy.html" style="color:#d9b15c;margin:0 8px">سياسة الخصوصية</a><a href="./terms.html" style="color:#d9b15c;margin:0 8px">الشروط والأحكام</a></footer>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -162,7 +184,8 @@ function renderProducts(){let q=document.getElementById('search').value.trim().t
 function toggleFavorite(id){favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];try{localStorage.setItem('mns_favorites',JSON.stringify(favorites))}catch(e){}renderProducts()}
 function toggleFavoritesOnly(){favoritesOnly=!favoritesOnly;document.getElementById('favFilter').classList.toggle('active',favoritesOnly);renderProducts()}
 function clearSearch(){document.getElementById('search').value='';renderProducts()}
-function goToCart(){document.querySelector('.layout').scrollIntoView({behavior:'smooth',block:'start'})}
+function goToCart(){document.getElementById('homeView').classList.add('hidden');document.getElementById('catalogView').classList.add('hidden');document.getElementById('checkoutView').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});try{history.pushState({mnsView:'checkout'},'',location.pathname+location.search+'#checkout')}catch(e){}}
+function returnFromCheckout(){document.getElementById('checkoutView').classList.add('hidden');if(activeCategory&&activeCategory!=='الكل'){document.getElementById('catalogView').classList.remove('hidden')}else{document.getElementById('homeView').classList.remove('hidden')}window.scrollTo({top:0,behavior:'smooth'})}
 function add(id){cart[id]=(cart[id]||0)+1;renderCart()}
 function change(id,d){cart[id]=(cart[id]||0)+d;if(cart[id]<=0)delete cart[id];renderCart()}
 function renderCart(){try{localStorage.setItem("mns_cart",JSON.stringify(cart))}catch(e){}let ids=Object.keys(cart);document.getElementById('cart').innerHTML=ids.length?ids.map(id=>{let p=productsData.find(x=>x.id==id);if(!p)return '';return '<div class="cartrow"><div><b>'+safeText(p.name)+'</b><br><small>'+(Number(p.price)>0?fmt(Number(p.price)):'السعر عند الاستفسار')+'</small></div><div class="qty"><button class="secondary" onclick="change('+Number(id)+',-1)">−</button><b>'+cart[id]+'</b><button onclick="change('+Number(id)+',1)">+</button></div></div>'}).join(''):'<p class="empty">السلة فارغة حاليًا.</p>';document.getElementById('total').textContent='يُحدد بعد تأكيد الأسعار';document.getElementById('cartCount').textContent=ids.reduce((sum,id)=>sum+Number(cart[id]||0),0)}
