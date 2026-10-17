@@ -57,13 +57,13 @@ a{color:#f0d58f}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="./firebase-config.js"></script>
+<script src="./firebase-config.js?v=6"></script>
 <script>
 const $=id=>document.getElementById(id);let auth=null,db=null,user=null,productCache=[];
 const config=window.MNS_FIREBASE_CONFIG||{};
-const configured=config.apiKey&&!config.apiKey.includes('PASTE_')&&config.projectId&&!config.projectId.includes('PASTE_')&&window.MNS_ADMIN_UID&&!window.MNS_ADMIN_UID.includes('PASTE_');
+const configured=typeof config.apiKey==='string'&&config.apiKey.length>10&&config.projectId==='mawad-naseer-store'&&typeof window.MNS_ADMIN_UID==='string'&&window.MNS_ADMIN_UID.length>10;
 function showAuthMessage(message,kind='bad'){$('authMsg').textContent=message;$('authMsg').className=kind}
-if(!configured){$('configWarning').classList.remove('hidden');$('loginBtn').disabled=true;showAuthMessage('إعداد Firebase أو UID الإدارة غير مكتمل.')}
+if(!configured){$('configWarning').classList.remove('hidden');$('loginBtn').disabled=true;showAuthMessage('ملف إعدادات Firebase لم يُحمّل أو بيانات المشروع/UID غير صحيحة. حدّث الصفحة تحديثًا كاملًا.');console.error('Firebase config diagnostic',{configLoaded:!!window.MNS_FIREBASE_CONFIG,projectId:config.projectId,adminUidLoaded:!!window.MNS_ADMIN_UID});}
 else if(typeof firebase==='undefined'||!firebase.auth||!firebase.firestore){$('configWarning').classList.remove('hidden');showAuthMessage('مكتبة Firebase لم تُحمّل. تأكد من الإنترنت، ثم حدّث الصفحة تحديثًا كاملًا.')}
 else{try{if(!firebase.apps.length)firebase.initializeApp(config);auth=firebase.auth();db=firebase.firestore()}catch(e){showAuthMessage('تعذر تشغيل Firebase: '+(e.message||e));console.error(e)}}
 $('loginBtn').addEventListener('click',async()=>{showAuthMessage('جارٍ التحقق من تسجيل الدخول…','muted');$('loginBtn').disabled=true;try{if(!auth){throw new Error('Firebase Auth غير جاهز. حدّث الصفحة وتأكد من اتصال الإنترنت.')}const email=$('email').value.trim(),password=$('password').value;if(!email||!password){showAuthMessage('اكتب البريد الإلكتروني وكلمة المرور أولًا.');return}const credential=await auth.signInWithEmailAndPassword(email,password);if(credential.user.uid!==window.MNS_ADMIN_UID){await auth.signOut();showAuthMessage('تم الدخول بحساب مختلف عن حساب الإدارة المصرّح به. راجع UID حساب الإدارة.');return}showAuthMessage('تم تسجيل الدخول بنجاح.','ok')}catch(e){console.error('Admin login error:',e);const messages={'auth/invalid-email':'صيغة البريد الإلكتروني غير صحيحة.','auth/user-not-found':'لا يوجد حساب بهذا البريد في Firebase Authentication.','auth/wrong-password':'كلمة المرور غير صحيحة.','auth/invalid-credential':'بيانات الدخول غير صحيحة أو الحساب غير موجود.','auth/operation-not-allowed':'فعّل طريقة Email/Password من Firebase Authentication ثم جرّب مجددًا.','auth/too-many-requests':'محاولات كثيرة؛ انتظر قليلًا ثم حاول مرة أخرى.','auth/network-request-failed':'مشكلة اتصال بالإنترنت أو تعذر تحميل Firebase.'};showAuthMessage(messages[e.code]||('فشل تسجيل الدخول ('+(e.code||'خطأ')+'): '+(e.message||'راجع إعداد Firebase.')))}finally{$('loginBtn').disabled=false}});
