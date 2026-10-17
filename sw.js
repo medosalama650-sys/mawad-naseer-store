@@ -1,4 +1,4 @@
-const CACHE_NAME = "mawad-naseer-store-v2";
+const CACHE_NAME = "mawad-naseer-store-v3";
 const APP_FILES = ["./", "./index.html", "./manifest.json", "./icon.svg", "./admin.html", "./firebase-config.js"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES)).then(() => self.skipWaiting()));
