@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Sitemap: https://medosalama650-sys.github.io/mawad-naseer-store/sitemap.xml
