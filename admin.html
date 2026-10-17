@@ -5,6 +5,30 @@
 <meta name="theme-color" content="#111111"><title>إدارة المتجر | معوض نصير</title>
 <style>
 :root{--bg:#101010;--panel:#191919;--gold:#d9b15c;--muted:#b7b7b7;--line:#343434}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f8f5ee;font-family:system-ui,Tahoma,Arial,sans-serif}header{padding:18px;text-align:center;background:linear-gradient(130deg,#302719,#101010);border-bottom:1px solid #6a5226}h1{margin:4px;color:var(--gold);font-size:25px}main{max-width:1000px;margin:auto;padding:16px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px;margin:12px 0}input,textarea,select{width:100%;padding:11px;margin:5px 0 10px;border:1px solid #444;border-radius:9px;background:#111;color:#fff;font:inherit}label{font-size:13px;color:#ddd}button{padding:10px 13px;border:0;border-radius:9px;background:var(--gold);font:inherit;font-weight:700;cursor:pointer;margin:3px}button.secondary{background:#303030;color:#fff;border:1px solid #444}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.item{border:1px solid var(--line);border-radius:12px;padding:12px;background:#141414}.item h3{margin:4px 0}.muted{color:var(--muted);font-size:13px}.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}.hidden{display:none!important}.warn{background:#251e10;border:1px solid #6a5226;border-radius:10px;padding:12px;color:#f1dcae}.ok{color:#9fe0a9}.bad{color:#ffaaaa}.order{border-bottom:1px solid #333;padding:12px 0}.order textarea{min-height:60px}a{color:var(--gold)}
+
+/* Premium responsive admin refresh */
+:root{--bg:#0b0c0b;--panel:#151715;--gold:#e8c36b;--muted:#b9bdb7;--line:#30342f}
+body{background:radial-gradient(ellipse at top,#25291f 0%,#101210 38%,#090a09 80%);line-height:1.65}
+header{position:relative;overflow:hidden;padding:26px 16px 24px;background:linear-gradient(135deg,#111511,#292316 55%,#0b0e0b);border-bottom:1px solid #806633}
+header>div:first-child{font-size:10px;letter-spacing:2.5px;color:#e8c36b}
+h1{font-size:clamp(24px,5vw,32px);color:#f0d58f}
+main{max-width:980px;padding:18px 14px 60px}
+.panel{background:linear-gradient(145deg,#191c18,#121412);border:1px solid #30352e;border-radius:18px;padding:17px;margin:13px 0;box-shadow:0 8px 22px #0002}
+input,textarea,select{padding:13px;margin:6px 0 12px;border:1px solid #383d36;border-radius:12px;background:#0e100e;min-height:46px}
+input:focus,textarea:focus,select:focus{outline:2px solid #e8c36b55;border-color:#e8c36b}
+label{font-size:13px;color:#e3e3dd}
+button{padding:11px 15px;border-radius:12px;margin:4px 3px 4px 0;transition:transform .15s,filter .15s}
+button:active{transform:scale(.98)}
+button.secondary{background:#222621;border-color:#3c4238}
+.grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:13px}
+.item{border:1px solid #30352e;border-radius:15px;padding:14px;background:#111411}
+.item h3{font-size:17px;line-height:1.5}
+.warn{background:linear-gradient(110deg,#1c211b,#201b11);border-color:#51452b;border-radius:14px;line-height:1.8}
+.order{border-bottom-color:#30352e;padding:15px 0}
+a{color:#f0d58f}
+.row{align-items:center}
+@media(max-width:420px){.row>*{min-width:100%}button{min-height:43px}.panel{padding:14px}}
+
 </style>
 </head><body>
 <header><div>MAWAD NASEER STORE</div><h1>لوحة إدارة المتجر</h1><div class="muted">مخصصة لصاحب المتجر — إدارة الأصناف والطلبات</div></header>
