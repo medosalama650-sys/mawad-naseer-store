@@ -3,7 +3,7 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function isAdmin() {
       return request.auth != null
-        && request.auth.uid == "i4tb4fJn8VQ23Fp5VH2jiNepOz1";
+        && request.auth.uid == "i4tb4fJn8VQ23Fp5VH2wjiNepOz1";
     }
 
     // المنتجات يقرأها الجميع؛ الكتابة للإدارة فقط.
