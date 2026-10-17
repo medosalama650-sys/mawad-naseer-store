@@ -20,7 +20,8 @@ service cloud.firestore {
     match /orders/{orderId} {
       allow create: if
         request.resource.data.keys().hasAll([
-          'buyer','phone','items','notes','status','createdAt'
+          'buyer','phone','items','notes','status','createdAt',
+          'locationLat','locationLng','locationAccuracy'
         ])
         && request.resource.data.keys().hasOnly([
           'buyer','phone','phone2','items','notes','status','createdAt',
@@ -36,30 +37,19 @@ service cloud.firestore {
         && request.resource.data.notes.size() <= 1000
         && request.resource.data.createdAt is timestamp
         && (!('phone2' in request.resource.data) || (request.resource.data.phone2 is string && request.resource.data.phone2.size() <= 40))
-        && (
-          !('locationLat' in request.resource.data)
-          || (request.resource.data.locationLat is number
-              && request.resource.data.locationLat >= -90
-              && request.resource.data.locationLat <= 90)
-        )
-        && (
-          !('locationLng' in request.resource.data)
-          || (request.resource.data.locationLng is number
-              && request.resource.data.locationLng >= -180
-              && request.resource.data.locationLng <= 180)
-        )
+        && request.resource.data.locationLat is number
+        && request.resource.data.locationLat >= -90
+        && request.resource.data.locationLat <= 90
+        && request.resource.data.locationLng is number
+        && request.resource.data.locationLng >= -180
+        && request.resource.data.locationLng <= 180
         && request.resource.data.items is list
         && request.resource.data.items.size() > 0
         && request.resource.data.items.size() <= 50
         && request.resource.data.status == 'new'
-        && (
-          !('locationAccuracy' in request.resource.data)
-          || (
-            request.resource.data.locationAccuracy is number
-            && request.resource.data.locationAccuracy >= 0
-            && request.resource.data.locationAccuracy <= 100000
-          )
-        );
+        && request.resource.data.locationAccuracy is number
+        && request.resource.data.locationAccuracy >= 0
+        && request.resource.data.locationAccuracy <= 100000;
       allow read, update, delete: if isAdmin();
     }
 
