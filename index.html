@@ -7,18 +7,73 @@
 <title>معوض نصير ستور | تجارة الجملة</title>
 <style>
 :root{--bg:#101010;--panel:#191919;--gold:#d9b15c;--muted:#b7b7b7;--line:#343434}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f8f5ee;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}header{padding:20px 16px;background:radial-gradient(ellipse at top,#302719 0%,#171717 44%,#080808 100%);border-bottom:1px solid #6a5226;text-align:center}.brand-row{display:flex;align-items:center;justify-content:center;gap:13px}.brand-mark{width:58px;height:58px;flex:0 0 58px;border:1px solid var(--gold);border-radius:17px;display:grid;place-items:center;background:linear-gradient(145deg,#302817,#111);box-shadow:0 0 22px #d9b15c20;color:var(--gold);font-family:Georgia,serif;font-weight:900;font-size:23px;letter-spacing:-2px}.brand-copy{text-align:right}.brand-copy .logo{font-size:10px;letter-spacing:2px;color:var(--gold)}h1{margin:2px 0;font-size:clamp(23px,5vw,34px);background:linear-gradient(90deg,#fff1c7,#d9b15c);background-clip:text;-webkit-background-clip:text;color:transparent}.brand-copy p{margin:3px 0 0;color:var(--muted);font-size:12px}main{max-width:1050px;margin:auto;padding:18px 14px 40px}.notice{border:1px solid #4b3d22;background:#201b10;padding:12px;border-radius:12px;color:#e8d8b2;font-size:13px;margin-bottom:16px}.welcome{padding:10px 2px 4px}.welcome h2{font-size:24px;margin:8px 0}.welcome p{color:var(--muted);margin:0 0 14px}.home-search{position:relative;margin:12px 0 18px}.home-search input{padding:15px 46px 15px 14px;border-color:#6b552a;background:#171717;border-radius:14px;box-shadow:0 5px 20px #0004}.search-icon{position:absolute;right:15px;top:50%;transform:translateY(-50%);font-size:19px;color:var(--gold);pointer-events:none}.categories{display:flex;flex-direction:column;gap:10px}.category-card{width:100%;min-height:94px;text-align:right;padding:15px;background:linear-gradient(110deg,#242424,#151515);border:1px solid #48402e;border-radius:15px;color:#fff;cursor:pointer;display:grid;grid-template-columns:52px 1fr auto;grid-template-rows:auto auto;column-gap:12px;align-items:center;justify-content:initial;transition:transform .15s,border-color .15s}.category-card:active{transform:scale(.99)}.category-card .symbol{grid-column:1;grid-row:1 / span 2;width:48px;height:48px;display:grid;place-items:center;font-size:25px;border:1px solid #554426;border-radius:13px;background:#201b11}.category-card strong{grid-column:2;grid-row:1;font-size:16px;align-self:end}.category-card small{grid-column:2;grid-row:2;color:var(--muted);font-size:12px;align-self:start;margin-top:3px}.arrow{grid-column:3;grid-row:1 / span 2;color:var(--gold);font-size:12px;white-space:nowrap}.toolbar{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0}.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.product,.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:15px}.tag{font-size:12px;color:var(--gold)}.product h3{margin:7px 0;font-size:17px}.product p{color:var(--muted);font-size:13px;min-height:34px}.price{font-weight:800;color:var(--gold);margin:10px 0}.product-actions{display:grid;grid-template-columns:1fr auto;gap:8px}.product-actions .fav{min-width:48px;background:#292929;color:#f0cb73;border:1px solid #574627}.product-actions .fav.active{background:#3a2d15;border-color:var(--gold)}.quick-tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}.quick-tools button{flex:1;min-width:125px}.cart-float{position:fixed;bottom:14px;left:14px;z-index:20;box-shadow:0 6px 24px #0009;border:1px solid #f0d28d;padding:12px 16px;border-radius:999px}.cart-float span{display:inline-grid;place-items:center;min-width:22px;height:22px;margin-right:6px;padding:0 5px;border-radius:999px;background:#111;color:var(--gold)}button{border:0;border-radius:10px;background:var(--gold);color:#17130a;font-weight:750;padding:11px 14px;font:inherit;cursor:pointer}button.secondary{background:#292929;color:#fff;border:1px solid #454545}.product button{width:100%}input,textarea{width:100%;background:#111;color:#fff;border:1px solid #444;border-radius:10px;padding:12px;font:inherit}h2{font-size:20px;margin:18px 0 12px}.layout{display:grid;grid-template-columns:1fr;gap:14px;margin-top:18px}.cartrow{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}.cartrow small{color:var(--muted)}.qty{display:flex;align-items:center;gap:7px}.qty button{padding:4px 10px}.total{display:flex;justify-content:space-between;font-weight:800;margin:14px 0;color:var(--gold)}label{display:block;font-size:13px;color:#ddd;margin:10px 0 5px}.full{width:100%;margin-top:9px}.empty{color:var(--muted);font-size:14px}.backrow{display:flex;align-items:center;gap:10px;margin:8px 0 18px}.backrow h2{margin:0;flex:1}.hidden{display:none!important}footer{text-align:center;color:#777;font-size:12px;padding:20px;border-top:1px solid var(--line)}@media(min-width:650px){main{padding-left:22px;padding-right:22px}.category-card{min-height:100px;padding:17px 20px}.toolbar{grid-template-columns:2fr 1fr}.layout{grid-template-columns:1fr 1fr}}
+
+/* Premium mobile-first refresh */
+:root{--bg:#0b0c0b;--panel:#151715;--gold:#e8c36b;--muted:#b9bdb7;--line:#30342f;--green:#173e32}
+body{background:radial-gradient(ellipse at 50% -15%,#2b3024 0%,#101210 38%,#090a09 75%);letter-spacing:0}
+header{position:relative;overflow:hidden;padding:26px 16px 22px;background:linear-gradient(135deg,#111511 0%,#242015 48%,#0c100d 100%);border-bottom:1px solid #806633}
+header:after{content:"";position:absolute;inset:auto -15% -90px;height:140px;border-radius:50%;border:1px solid #e8c36b22;pointer-events:none}
+.brand-row{position:relative;z-index:1}
+.brand-mark{width:66px;height:66px;flex-basis:66px;border-radius:20px;border:1px solid #f1d48a;background:linear-gradient(145deg,#4a3a1c,#121512);box-shadow:0 8px 28px #0008,0 0 25px #d9b15c16;font-size:25px}
+.brand-copy .logo{letter-spacing:2.4px;font-size:9px}
+h1{font-size:clamp(27px,6vw,38px);letter-spacing:.1px}
+.brand-copy p{font-size:13px}
+main{max-width:900px;padding:18px 14px 110px}
+.notice{background:linear-gradient(110deg,#1c211b,#201b11);border:1px solid #51452b;border-radius:14px;padding:13px 14px;line-height:1.8}
+.welcome{padding:12px 3px 4px}
+.welcome h2{font-size:27px;line-height:1.4;margin:4px 0 5px;letter-spacing:-.4px}
+.welcome p{font-size:14px;line-height:1.8}
+.home-search{margin:16px 0 22px}
+.home-search input{min-height:54px;padding:15px 48px 15px 15px;border:1px solid #756039;background:#141714;border-radius:16px;font-size:15px}
+.home-search input:focus,.toolbar input:focus,input:focus,textarea:focus{outline:2px solid #e8c36b55;border-color:var(--gold)}
+.categories{gap:11px}
+.category-card{position:relative;min-height:92px;padding:15px 14px;border-radius:18px;border:1px solid #373a31;background:linear-gradient(115deg,#1e221d,#131512);box-shadow:0 7px 20px #0002;grid-template-columns:54px minmax(0,1fr) auto;column-gap:13px}
+.category-card:hover{border-color:#8c713b;background:linear-gradient(115deg,#28271e,#171a16)}
+.category-card .symbol{width:50px;height:50px;border-radius:15px;background:linear-gradient(145deg,#30291a,#171a15);border-color:#66512d}
+.category-card strong{font-size:16px;line-height:1.5}
+.category-card small{font-size:12px;line-height:1.6}
+.arrow{font-size:11px;color:#f0d58f}
+.toolbar{gap:8px}
+.toolbar input{min-height:48px}
+.products{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:13px}
+.product,.panel{border-radius:18px;border-color:#30352e;background:linear-gradient(145deg,#191c18,#121412);box-shadow:0 8px 22px #0002}
+.product{padding:14px}
+.product h3{font-size:16px;line-height:1.6}
+.product p{line-height:1.8}
+.product img{border:1px solid #2e332b}
+.price{font-size:15px}
+button{border-radius:12px;transition:transform .15s,filter .15s,background .15s}
+button:active{transform:scale(.98)}
+button:not(.secondary):hover{filter:brightness(1.06)}
+button.secondary{background:#222621;border-color:#3c4238}
+.quick-tools{gap:9px}
+.quick-tools button{min-height:43px}
+.cart-float{bottom:16px;left:14px;background:linear-gradient(120deg,#f1d78e,#d4a94d);border:1px solid #fff0c5;box-shadow:0 8px 30px #000a;font-size:14px}
+.cart-float span{background:#172018;color:#f5d889}
+.layout{gap:13px;margin-top:22px}
+.panel{padding:17px}
+.panel h2{margin-top:2px;font-size:19px}
+input,textarea{border-radius:12px;background:#0e100e;border-color:#383d36}
+label{margin-top:13px}
+.full{min-height:48px}
+.backrow{flex-wrap:wrap}
+.backrow h2{font-size:20px}
+footer{border-top-color:#2d302b;padding:23px 15px 90px}
+@media(min-width:650px){main{padding:22px 24px 120px}.categories{gap:12px}.category-card{min-height:100px;padding:18px 20px}.layout{grid-template-columns:1fr 1fr}.welcome h2{font-size:31px}}
+@media(max-width:380px){.category-card{grid-template-columns:45px minmax(0,1fr);padding:12px;column-gap:10px}.category-card .symbol{width:43px;height:43px}.arrow{grid-column:2;grid-row:3;margin-top:3px}.category-card{grid-template-rows:auto auto auto}.category-card .symbol{grid-row:1 / span 2}.category-card strong{grid-column:2}.category-card small{grid-column:2}}
+
 </style></head>
 <body>
 <header><div class="brand-row"><div class="brand-mark" aria-label="شعار معوض نصير">MN</div><div class="brand-copy"><div class="logo">MAWAD NASEER STORE</div><h1>معوض نصير</h1><p>اختيارك المميز لتجارة الجملة</p></div></div><button id="installBtn" class="secondary" style="display:none;margin-top:14px">تثبيت المتجر على الموبايل</button></header>
 <main>
 <div class="notice">نسخة تجريبية للعرض. الأصناف والأسعار أمثلة عامة قابلة للتعديل؛ راجع الأسعار والتوفر مع المتجر قبل تأكيد الطلب.</div>
 <section id="homeView">
-<div class="welcome"><h2>تسوق بسهولة</h2><p>ابحث عن احتياجك أو اختار قسمًا من الأقسام بالأسفل.</p></div><div class="home-search"><span class="search-icon">⌕</span><input id="homeSearch" placeholder="ابحث عن منتج أو قسم..." aria-label="البحث عن منتج أو قسم"></div>
+<div class="welcome"><h2>تجارة الجملة، بشكل أبسط</h2><p>وصل للصنف اللي محتاجه بسرعة، وشوف تفاصيله، واجمع طلبك في مكان واحد.</p></div><div class="home-search"><span class="search-icon">⌕</span><input id="homeSearch" placeholder="اكتب اسم الصنف أو القسم اللي بتدور عليه..." aria-label="البحث عن منتج أو قسم"></div>
 <div class="categories">
-<button class="category-card" onclick="openCategory('أدوات ومعدات')"><span class="symbol">🧰</span><strong>أدوات ومعدات</strong><small>أدوات ومستلزمات العمل</small><span class="arrow">عرض المنتجات ←</span></button>
-<button class="category-card" onclick="openCategory('تعبئة وتغليف')"><span class="symbol">📦</span><strong>تعبئة وتغليف</strong><small>عبوات وأكياس ومواد تغليف</small><span class="arrow">عرض المنتجات ←</span></button>
-<button class="category-card" onclick="openCategory('مستلزمات عامة')"><span class="symbol">🏷️</span><strong>مستلزمات عامة</strong><small>احتياجات المخازن والتجارة</small><span class="arrow">عرض المنتجات ←</span></button>
-<button class="category-card" onclick="openCategory('الكل')"><span class="symbol">🛍️</span><strong>كل المنتجات</strong><small>تصفح كل الأصناف المتاحة</small><span class="arrow">عرض الكل ←</span></button>
+<button class="category-card" onclick="openCategory('أدوات ومعدات')"><span class="symbol">🧰</span><strong>أدوات ومعدات</strong><small>أدوات ومعدات للاستخدام التجاري</small><span class="arrow">عرض المنتجات ←</span></button>
+<button class="category-card" onclick="openCategory('تعبئة وتغليف')"><span class="symbol">📦</span><strong>تعبئة وتغليف</strong><small>حلول التعبئة والتغليف</small><span class="arrow">عرض المنتجات ←</span></button>
+<button class="category-card" onclick="openCategory('مستلزمات عامة')"><span class="symbol">🏷️</span><strong>مستلزمات عامة</strong><small>مستلزمات تشغيل وتنظيم المخزون</small><span class="arrow">عرض المنتجات ←</span></button>
+<button class="category-card" onclick="openCategory('الكل')"><span class="symbol">🛍️</span><strong>كل المنتجات</strong><small>تصفح الكتالوج بالكامل</small><span class="arrow">عرض الكل ←</span></button>
 </div>
 </section>
 <section id="catalogView" class="hidden">
@@ -28,7 +83,7 @@
 </section>
 <div class="layout"><section class="panel"><h2>🛒 سلة الطلب</h2><div id="cart"><p class="empty">السلة فارغة حاليًا.</p></div><div class="total"><span>الإجمالي التقديري</span><span id="total">يُحدد بعد تأكيد الأسعار</span></div><button class="secondary full" onclick="clearCart()">إفراغ السلة</button></section>
 <section class="panel"><h2>بيانات التاجر</h2><label for="buyer">اسم التاجر / الشركة</label><input id="buyer" placeholder="اكتب الاسم"><label for="phone">رقم هاتفك</label><input id="phone" inputmode="tel" placeholder="01xxxxxxxxx"><label for="wa">رقم واتساب المتجر (مفتاح مصر 20 ثم الرقم)</label><input id="wa" inputmode="numeric" placeholder="201xxxxxxxxx"><label for="notes">ملاحظات الطلب</label><textarea id="notes" rows="3" placeholder="الكمية أو تفاصيل التوصيل"></textarea><button class="full" onclick="sendOrder()">تجهيز الطلب عبر واتساب</button><p class="empty">راجع تفاصيل الطلب في واتساب قبل إرساله. لن يُرسل تلقائيًا.</p></section></div>
-</main><button class="cart-float" onclick="goToCart()">🛒 سلة الطلب <span id="cartCount">0</span></button><footer>معوض نصير ستور · نسخة أولية تجريبية</footer>
+</main><button class="cart-float" onclick="goToCart()">🛒 سلة الطلب <span id="cartCount">0</span></button><footer>معوض نصير · تجربة شراء جملة أسهل</footer>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="./firebase-config.js"></script>
