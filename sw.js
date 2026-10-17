@@ -1,5 +1,5 @@
-const CACHE_NAME = "mawad-naseer-store-v13";
-const APP_FILES = ["./", "./index.html", "./manifest.json", "./icon.svg", "./admin.html", "./firebase-config.js"];
+const CACHE_NAME = "mawad-naseer-store-v14";
+const APP_FILES = ["./", "./index.html", "./manifest.json", "./icon.svg", "./admin.html", "./firebase-config.js", "./offline.html", "./privacy.html", "./terms.html", "./404.html"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES)).then(() => self.skipWaiting()));
 });
@@ -24,5 +24,5 @@ self.addEventListener("fetch", event => {
       caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
     }
     return response;
-  }).catch(() => caches.match("./index.html"))));
+  }).catch(() => event.request.mode === "navigate" ? caches.match("./offline.html") : caches.match("./index.html"))));
 });
