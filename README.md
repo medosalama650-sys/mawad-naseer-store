@@ -4,7 +4,7 @@
 
 ## نشر الموقع مجانًا
 1. افتح إعدادات GitHub Pages: https://github.com/medosalama650-sys/mawad-naseer-store/settings/pages
-2. اختر **Deploy from a branch** ثم الفرع `main` والمجلد `/ (root))، واضغط Save.
+2. اختر **Deploy from a branch** ثم الفرع `main` والمجلد `/(root)`، واضغط Save.
 3. رابط المتجر: https://medosalama650-sys.github.io/mawad-naseer-store/
 4. لوحة الإدارة: https://medosalama650-sys.github.io/mawad-naseer-store/admin.html
 
@@ -13,8 +13,8 @@
 2. فعّل **Authentication > Sign-in method > Email/Password**.
 3. من **Authentication > Users** أنشئ حساب صاحب المتجر، ثم انسخ UID الخاص به.
 4. أنشئ قاعدة **Cloud Firestore**.
-5. افتح `firebase-config.js` في المستودع، واستبدل القيم التجريبية بقيم تطبيق الويب من **Project settings > Your apps**. ضع UID في `MNS_ADMIN_UID`.
-6. افتح `firestore.rules` واستبدل `PASTE_ADMIN_UID_HERE` بنفس UID، ثم انسخ القواعد إلى **Firestore Database > Rules** واضغط Publish.
+5. تم تجهيز `firebase-config.js` بقيم مشروع `mawad-naseer-store` الحالي. لا تغيّرها إلا إذا نقلت التطبيق إلى مشروع Firebase آخر. تأكد أن `MNS_ADMIN_UID` يطابق UID لحساب الإدارة.
+6. ملف `firestore.rules` يحتوي UID الإدارة الحالي ويتطلب إحداثيات صحيحة مع الطلبات الجديدة. انسخ محتواه إلى **Firestore Database > Rules** واضغط **Publish** داخل Firebase Console؛ رفع الملف إلى GitHub وحده لا ينشر قواعد Firebase.
 7. انتظر تحديث GitHub Pages، ثم افتح لوحة الإدارة وسجّل الدخول بحساب صاحب المتجر.
 
 ## ما الذي يعمل بعد الإعداد؟
@@ -27,3 +27,10 @@
 - قبل Firebase، الموقع يعرض أصنافًا تجريبية فقط. لا تعتبر طلب واتساب تأكيدًا للشراء حتى تتفق مع العميل.
 - لا تضع كلمة المرور في ملفات الموقع، ولا تستخدم قواعد Firestore التي تسمح للجميع بالكتابة.
 - صور المنتجات يجب أن تكون روابط صور موثوقة. استخدم الإدارة للمنتجات والمستلزمات التجارية العامة فقط.
+
+## ملفات مساعدة مضافة
+- `404.html`: صفحة بديلة للروابط غير الموجودة.
+- `offline.html`: رسالة عند فتح صفحات المتجر دون اتصال.
+- `privacy.html` و`terms.html`: سياسة الخصوصية والشروط.
+- `robots.txt` و`sitemap.xml`: ملفات مساعدة لمحركات البحث.
+- `.nojekyll`: تعطيل معالجة Jekyll الافتراضية في GitHub Pages.
