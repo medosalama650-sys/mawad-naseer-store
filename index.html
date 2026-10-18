@@ -301,6 +301,7 @@ function goToCart(){document.getElementById('homeView').classList.add('hidden');
 function returnFromCheckout(){if(activeCategory&&activeCategory!=='الكل'){openCategory(activeCategory)}else{showHome()}}
 window.addEventListener('popstate',function(e){const v=e.state&&e.state.mnsView;if(v==='catalog'){openCategory(e.state.category||'الكل')}else if(v==='checkout'){goToCart()}else if(v==='tools'){showTools()}else{showHome()}});
 
+</script>
 <div id="imageViewer" class="image-viewer" role="dialog" aria-modal="true" aria-label="صورة المنتج" onclick="if(event.target===this)closeProductImage()">
   <div class="image-viewer-content">
     <button type="button" class="image-viewer-close" onclick="closeProductImage()">إغلاق ✕</button>
