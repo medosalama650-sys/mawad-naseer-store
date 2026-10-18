@@ -1,5 +1,6 @@
 const admin = require("firebase-admin");
 const { onDocumentCreated, onDocumentUpdated } = require("firebase-functions/v2/firestore");
+const { onCall, HttpsError } = require("firebase-functions/v2/https");
 admin.initializeApp();
 const db = admin.firestore();
 const REGION = "us-central1";
@@ -51,4 +52,35 @@ exports.notifyCustomerOnOrderStatus = onDocumentUpdated({ document: "orders/{ord
   const status = String(after.status || "");
   const title = status === "cancelled" ? "تم إلغاء الفاتورة" : "تحديث طلبك — معوض نصير";
   await sendToUid(uid, title, (labels[status] || "تم تحديث حالة طلبك") + " • رقم الطلب: " + event.params.orderId, "./index.html#home");
+});
+exports.sendStoreNotification = onCall({ region: REGION }, async (request) => {
+  if (!request.auth || request.auth.uid !== ADMIN_UID) {
+    throw new HttpsError("permission-denied", "Admin access required.");
+  }
+  const title = String(request.data && request.data.title || "").trim().slice(0, 80);
+  const body = String(request.data && request.data.body || "").trim().slice(0, 240);
+  if (!title || !body) throw new HttpsError("invalid-argument", "Title and body are required.");
+  const snap = await db.collection("pushTokens").limit(500).get();
+  let sent = 0, failed = 0;
+  for (const doc of snap.docs) {
+    const token = doc.get("token");
+    if (typeof token !== "string" || !token) continue;
+    try {
+      await admin.messaging().send({
+        token,
+        notification: { title, body },
+        data: { url: "./index.html" },
+        webpush: { fcmOptions: { link: "./index.html" }, notification: { icon: "./icon.svg", dir: "rtl" } }
+      });
+      sent++;
+    } catch (error) {
+      failed++;
+      if (error.code === "messaging/registration-token-not-registered" || error.code === "messaging/invalid-registration-token") {
+        await doc.ref.delete().catch(() => {});
+      } else {
+        console.error("Broadcast push failed", error);
+      }
+    }
+  }
+  return { sent, failed };
 });
