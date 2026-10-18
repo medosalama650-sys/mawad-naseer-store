@@ -16,3 +16,6 @@ window.MNS_ADMIN_UID = "i4tb4fJn8VQ23Fp5VH2wjiNepOz1";
 
 // رقم واتساب المتجر لتلقي البلاغات واستفسارات متابعة الطلبات، بصيغة دولية بدون +.
 window.MNS_STORE_WHATSAPP = "201067046324";
+
+// أضف هنا مفتاح Web Push العام من Firebase Console > Project settings > Cloud Messaging.
+window.MNS_VAPID_KEY = "PASTE_VAPID_KEY_HERE";
