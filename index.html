@@ -127,6 +127,7 @@ footer a{color:var(--gold);margin:0 8px}
 <div class="header-badge">تجارة الجملة</div>
 </div></header>
 <main>
+<div id="productLoadStatus" role="status" style="margin:0 0 12px;padding:10px 12px;border:1px solid #455845;border-radius:10px;color:#e9bd62;font-size:12px">جاري الاتصال بكتالوج المتجر…</div>
 <section id="homeView">
 <div class="hero"><div class="eyebrow">مرحبًا بك في معوض نصير</div><h1>الجملة بقت أسهل.</h1><p>اكتشف الأصناف، جهّز طلبك، وتواصل مع المتجر بخطوات بسيطة.</p><div class="hero-actions"><button class="btn-primary" onclick="openCategory('الكل')">تصفّح المنتجات ←</button><button class="btn-secondary" id="installBtn">تثبيت التطبيق</button></div></div>
 <div class="home-search"><span class="search-symbol">⌕</span><input id="homeSearch" placeholder="بتدور على إيه النهارده؟" aria-label="البحث عن منتج أو قسم"></div>
@@ -144,7 +145,7 @@ footer a{color:var(--gold);margin:0 8px}
 <div class="backrow"><button class="btn-secondary" onclick="showHome()">→ الرئيسية</button><div class="view-title"><h2 id="catalogTitle">المنتجات</h2><p>اختار الأصناف المطلوبة وأضفها للسلة</p></div></div>
 <div class="toolbar"><input id="search" placeholder="ابحث عن صنف..." aria-label="بحث داخل الكتالوج"><button class="btn-secondary" onclick="clearSearch()">مسح</button></div>
 <div class="quick-tools"><button class="btn-secondary" id="favFilter" onclick="toggleFavoritesOnly()">♡ المفضلة</button></div>
-<div id="productLoadStatus" role="status" style="margin:10px 0;padding:10px 12px;border:1px solid #455845;border-radius:10px;color:#e9bd62;font-size:12px">جاري الاتصال بكتالوج المتجر…</div>
+
 <div id="products" class="products"></div>
 </section>
 <section id="checkoutView" class="hidden">
