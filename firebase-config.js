@@ -18,4 +18,4 @@ window.MNS_ADMIN_UID = "i4tb4fJn8VQ23Fp5VH2wjiNepOz1";
 window.MNS_STORE_WHATSAPP = "201067046324";
 
 // أضف هنا مفتاح Web Push العام من Firebase Console > Project settings > Cloud Messaging.
-window.MNS_VAPID_KEY = "PASTE_VAPID_KEY_HERE";
+window.MNS_VAPID_KEY = "BANOYEPYc1vBBQru7RHMjiMwU4eVG3xUfRJ7pma_BzKZOr7NaQqLhVvNCjDyJTZ5WzdPSKiWowNPawMrK9S1i78";
