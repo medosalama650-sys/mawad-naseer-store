@@ -14,8 +14,8 @@ window.MNS_FIREBASE_CONFIG = {
 // يجب أن يطابق UID نفسه الموجود في firestore.rules. لا تضع كلمة مرور هنا.
 window.MNS_ADMIN_UID = "i4tb4fJn8VQ23Fp5VH2wjiNepOz1";
 
-// رقم واتساب المتجر لتلقي البلاغات واستفسارات متابعة الطلبات، بصيغة دولية بدون +.
+// رقم واتساب المتجر بصيغة دولية بدون +.
 window.MNS_STORE_WHATSAPP = "201067046324";
 
-// أضف هنا مفتاح Web Push العام من Firebase Console > Project settings > Cloud Messaging.
+// المفتاح العام لإشعارات الويب من Firebase Cloud Messaging.
 window.MNS_VAPID_KEY = "BANOYEPYc1vBBQru7RHMjiMwU4eVG3xUfRJ7pma_BzKZOr7NaQqLhVvNCjDyJTZ5WzdPSKiWowNPawMrK9S1i78";
