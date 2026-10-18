@@ -34,3 +34,6 @@
 - `privacy.html` و`terms.html`: سياسة الخصوصية والشروط.
 - `robots.txt` و`sitemap.xml`: ملفات مساعدة لمحركات البحث.
 - `.nojekyll`: تعطيل معالجة Jekyll الافتراضية في GitHub Pages.
+
+## فحص الأمان قبل الإطلاق
+راجع ملف [`SECURITY_CHECKLIST.md`](./SECURITY_CHECKLIST.md) قبل استقبال بيانات حقيقية. رفع القواعد إلى GitHub لا ينشرها في Firebase، ووجود ملفات Cloud Functions لا يعني أنها نُشرت أو أن الإشعارات تعمل. اختبر صلاحيات Firestore من حساب غير إداري، وتأكد من حالة النشر والفوترة في Firebase Console.
