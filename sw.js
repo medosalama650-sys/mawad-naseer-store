@@ -19,7 +19,7 @@ self.addEventListener("notificationclick", event => {
     return clients.openWindow(target);
   }));
 });
-const CACHE_NAME = "mawad-naseer-store-v43";
+const CACHE_NAME = "mawad-naseer-store-v44";
 const APP_FILES = ["./", "./index.html", "./manifest.json", "./icon.svg", "./admin.html", "./order-view.html", "./firebase-config.js", "./offline.html", "./privacy.html", "./terms.html", "./404.html"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES)).then(() => self.skipWaiting()));
