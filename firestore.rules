@@ -25,7 +25,7 @@ service cloud.firestore {
         ])
         && request.resource.data.keys().hasOnly([
           'buyer','phone','phone2','items','notes','status','createdAt',
-          'locationLat','locationLng','locationAccuracy',
+          'locationLat','locationLng','locationAccuracy','customerUid',
           'deliveryGovernorate','deliveryCity','deliveryVillage','deliveryStreet','deliveryAddress'
         ])
         && request.resource.data.buyer is string
@@ -55,6 +55,7 @@ service cloud.firestore {
         && request.resource.data.items is list
         && request.resource.data.items.size() > 0
         && request.resource.data.items.size() <= 50
+        && (!('customerUid' in request.resource.data) || (request.auth != null && request.resource.data.customerUid is string && request.resource.data.customerUid == request.auth.uid))
         && request.resource.data.status == 'new';
       allow read, update, delete: if isAdmin();
     }
