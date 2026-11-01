@@ -38,6 +38,7 @@ footer{text-align:center;color:#748477;font-size:10px;padding:18px 10px}
 <div class="grid">
 <button class="card feature" data-go="coach"><span class="ico">🤖</span><span><b>اسأل الكابتن</b><small>اسأل عن التمرين والأجهزة</small></span></button>
 <button class="card feature" data-go="exercises"><span class="ico">🏋️</span><span><b>مكتبة التمارين</b><small>شرح العضلات وطريقة الأداء</small></span></button>
+<button class="card feature" data-go="equipment"><span class="ico">⚙️</span><span><b>تعليم الأجهزة</b><small>اعرف ضبط كل جهاز واستخدامه</small></span></button>
 <button class="card feature" data-go="plan"><span class="ico">📅</span><span><b>جدول التمرين</b><small>خطة حسب مستواك وأيامك</small></span></button>
 <button class="card feature" data-go="food"><span class="ico">🥗</span><span><b>التغذية</b><small>أساسيات الأكل المتوازن</small></span></button>
 <button class="card feature" data-go="progress"><span class="ico">📈</span><span><b>سجل تقدمك</b><small>تابع الأوزان والتكرارات</small></span></button>
@@ -64,6 +65,12 @@ footer{text-align:center;color:#748477;font-size:10px;padding:18px 10px}
 <div class="view-title"><h1>مكتبة التمارين 🏋️</h1><p>اختار العضلة وشوف شرح مبسط لطريقة التمرين.</p></div>
 <input class="search" id="exerciseSearch" placeholder="دوّر على تمرين أو عضلة...">
 <div class="chips" id="muscleChips"></div><div class="exercise-list" id="exerciseList"></div>
+</section>
+<section id="equipment" class="view">
+<div class="view-title"><h1>دليل أجهزة الجيم ⚙️</h1><p>اتعرف على وظيفة الجهاز وإعداداته الأساسية قبل الاستخدام.</p></div>
+<input class="search" id="equipmentSearch" placeholder="دوّر على جهاز...">
+<div class="exercise-list" id="equipmentList"></div>
+<div class="notice">تصميم الأجهزة بيختلف من جيم للتاني. اتبع الملصق الموجود على الجهاز واطلب من مدرب المكان يراجع ضبط المقعد والأمان قبل أول استخدام.</div>
 </section>
 <section id="plan" class="view">
 <div class="view-title"><h1>جدولك يا بطل 📅</h1><p>جاوب على كام سؤال ونرتب لك نموذج تدريب مبدئي.</p></div>
@@ -124,6 +131,21 @@ const EXERCISES=[
 {id:"triceps-pushdown",name:"ضغط ترايسبس بالكابل",muscle:"ذراع",tool:"كابل",icon:"⬇️",desc:"تمرين لعضلة الترايسبس خلف الذراع.",steps:["قف قدام الكابل وامسك المقبض.","ثبت الكوع جنب جسمك.","ادفع المقبض لتحت لحد قرب فرد الذراع.","ارجع ببطء مع ثبات الكوع."],tip:"لو الكوع بيتحرك لقدام وورا كتير، خفف المقاومة."},
 {id:"plank",name:"بلانك",muscle:"بطن",tool:"وزن الجسم",icon:"🧘",desc:"تمرين ثبات لعضلات الجذع.",steps:["اسند على الساعدين وأطراف القدمين، أو ابدأ على الركبتين.","خلي الرأس والظهر والحوض في خط مريح.","شد عضلات البطن بشكل طبيعي واستمر مع التنفس.","انهي المجموعة قبل ما وضع الجسم ينهار."],tip:"مش لازم تطول في الوقت؛ الجودة أهم من المدة."}
 ];
+
+const EQUIPMENT=[
+{id:"chest-machine",name:"ماكينة ضغط الصدر",icon:"🏋️",purpose:"تدريب عضلات الصدر مع مسار حركة ثابت نسبيًا.",steps:["اقرأ تعليمات الجهاز وحدد الوزن الخفيف كبداية.","ظبط ارتفاع المقعد بحيث المقابض تكون قرب منتصف الصدر.","خلي الظهر مسنود والقدمين ثابتتين.","ادفع بسلاسة وارجع بتحكم، من غير قفل الكوع بعنف."],warning:"لو المقابض بتضغط على الكتف أو الحركة بتسبب ألم، وقف واطلب ضبط الجهاز."},
+{id:"lat-machine",name:"جهاز السحب العالي",icon:"↘️",purpose:"تدريب عضلات الظهر العريضة والذراعين.",steps:["ظبط وسادة الفخذ بحيث تثبتك من غير ضغط زائد.","امسك البار بقبضة مريحة.","اسحب ناحية أعلى الصدر مع ثبات الجذع.","ارجع لفوق ببطء وسيب الكتف يتحرك طبيعي."],warning:"متسحبش البار خلف الرقبة ومتستخدمش مرجحة الجسم."},
+{id:"row-machine",name:"جهاز السحب الأرضي",icon:"🚣",purpose:"تدريب منتصف الظهر وعضلات السحب.",steps:["ظبط المقعد ومسند القدمين حسب طولك.","ابدأ والذراعين ممدودين بشكل مريح.","اسحب المقبض ناحية البطن مع صدر ثابت.","ارجع ببطء من غير تدوير أو تقويس الظهر."],warning:"متشدش بجسمك للخلف؛ لو مش قادر تثبت ظهرك قلل المقاومة."},
+{id:"leg-press-machine",name:"جهاز ضغط الرجل",icon:"🦿",purpose:"تدريب عضلات الفخذ والمؤخرة.",steps:["اتأكد إن قفل الأمان شغال وافهم طريقة فتحه.","اسند الظهر والحوض على المقعد.","حط القدمين على المنصة بوضع مريح.","انزل في مدى يسمح لظهرك وحوضك يفضلوا ثابتين، وادفع بتحكم."],warning:"متقفلش الركبة بعنف ومتسمحش للحوض يلف عن المقعد."},
+{id:"leg-extension-machine",name:"جهاز فرد الرجل",icon:"🦵",purpose:"عزل عضلات مقدمة الفخذ.",steps:["ظبط محور دوران الجهاز قريب من محور الركبة.","حط الوسادة فوق الكاحل حسب تصميم الجهاز.","افرد الرجل ببطء لمدى مريح.","ارجع بتحكم من غير ما الوزن يخبط."],warning:"لو الركبة بتوجعك، وقف وراجع مختص أو مدرب مؤهل."},
+{id:"leg-curl-machine",name:"جهاز ثني الرجل الخلفي",icon:"🦵",purpose:"تدريب العضلات الخلفية للفخذ.",steps:["ظبط محور الجهاز مع مفصل الركبة.","ثبت الوسادة في المكان المحدد من الشركة المصنعة.","اثني الركبة بسلاسة.","ارجع ببطء مع ثبات الحوض."],warning:"متستخدمش اندفاع أو وزن يخليك ترفع الحوض عن المقعد."},
+{id:"cable-machine",name:"جهاز الكابل",icon:"🔗",purpose:"يسمح بتمارين سحب ودفع متعددة باستخدام مقابض مختلفة.",steps:["افحص الكابل والمقبض وتأكد إنهم ثابتين.","ظبط ارتفاع البكرة قبل تركيب المقبض.","قف بثبات وخلي مسار الحركة واضح.","ابدأ بمقاومة خفيفة وسيطر على الحركة في الاتجاهين."],warning:"متقفش في مسار حركة شخص آخر، ومتستخدمش كابل أو ملحق تالف."},
+{id:"smith-machine",name:"جهاز سميث",icon:"🏋️",purpose:"بار يتحرك على مسار موجه لبعض تمارين المقاومة.",steps:["اطلب شرح أقفال الأمان وطريقة فك البار من المدرب.","ظبط ارتفاع خطافات الأمان قبل وضع الوزن.","استخدم وزن خفيف وتأكد إن المكان فاضي حولك.","خلي مدرب مؤهل يراجع وضعك قبل أي تمرين جديد."],warning:"المسار الموجه مش معناه إن الجهاز آمن من غير ضبط أو إشراف."},
+{id:"treadmill",name:"المشاية الكهربائية",icon:"🏃",purpose:"المشي أو الجري وتحسين اللياقة القلبية التنفسية.",steps:["اتعرف على زر الإيقاف الطارئ ومفتاح الأمان.","ابدأ بسرعة بطيئة قبل زيادة السرعة تدريجيًا.","قف في منتصف السير وانظر للأمام.","قلل السرعة تدريجيًا قبل النزول."],warning:"اربط مشبك الأمان بملابسك، ومتقفزش على السير وهو سريع."}
+];
+function renderEquipment(){const q=$("equipmentSearch").value.trim().toLowerCase();const items=EQUIPMENT.filter(x=>x.name.toLowerCase().includes(q)||x.purpose.toLowerCase().includes(q));$("equipmentList").innerHTML=items.map(x=>'<article class="exercise"><div class="exercise-icon">'+x.icon+'</div><div><h3>'+x.name+'</h3><p>'+x.purpose+'</p></div><button class="btn secondary" data-device="'+x.id+'">شرح الجهاز</button></article>').join("");$("equipmentList").querySelectorAll("[data-device]").forEach(b=>b.onclick=()=>{const x=EQUIPMENT.find(v=>v.id===b.dataset.device);$("dialogTitle").textContent=x.icon+" "+x.name;$("dialogBody").innerHTML='<p class="muted">'+x.purpose+'</p><h3>قبل ما تبدأ</h3><ol class="steps">'+x.steps.map(s=>'<li>'+s+'</li>').join("")+'</ol><div class="notice">تنبيه الكابتن: '+x.warning+'</div><p class="muted">الشرح للتوعية العامة. اتبع دليل الشركة المصنّعة وتعليمات مدرب الجيم.</p>';$("exerciseDialog").showModal()})}
+$("equipmentSearch").addEventListener("input",renderEquipment);
+
 const $=id=>document.getElementById(id);
 window.GYMCOACH_STORAGE_SCOPE="guest";
 const storageKey=k=>"gymcoach_"+(window.GYMCOACH_STORAGE_SCOPE||"guest")+"_"+k;
@@ -133,7 +155,7 @@ let activeMuscle="الكل",logs=read("logs",[]),plans=read("plans",[]);
 window.__gymCoachLoadLocalScope=function(scope){window.GYMCOACH_STORAGE_SCOPE=scope||"guest";logs=read("logs",[]);plans=read("plans",[]);renderLogs();updateStats()};
 window.__gymCoachApplyCloudData=function(data){window.__gymCoachApplyingCloud=true;logs=Array.isArray(data.logs)?data.logs:[];plans=Array.isArray(data.plans)?data.plans:[];localStorage.setItem(storageKey("logs"),JSON.stringify(logs));localStorage.setItem(storageKey("plans"),JSON.stringify(plans));window.__gymCoachApplyingCloud=false;renderLogs();updateStats()};
 window.__gymCoachGetData=()=>({logs,plans});
-function go(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b.dataset.go===id));window.scrollTo({top:0,behavior:"smooth"});if(id==="progress")renderLogs();if(id==="exercises")renderExercises();updateStats()}
+function go(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b.dataset.go===id));window.scrollTo({top:0,behavior:"smooth"});if(id==="progress")renderLogs();if(id==="exercises")renderExercises();if(id==="equipment")renderEquipment();updateStats()}
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
 const muscles=["الكل","صدر","ظهر","كتف","رجل","ذراع","بطن"];
 function renderChips(){ $("muscleChips").innerHTML=muscles.map(m=>'<button class="'+(activeMuscle===m?'active':'')+'" data-muscle="'+m+'">'+m+'</button>').join("");$("muscleChips").querySelectorAll("button").forEach(b=>b.onclick=()=>{activeMuscle=b.dataset.muscle;renderChips();renderExercises()})}
