@@ -155,4 +155,29 @@ $("chatForm").onsubmit=e=>{e.preventDefault();const q=$("chatInput").value.trim(
 document.querySelectorAll("[data-question]").forEach(b=>b.onclick=()=>sendChat(b.dataset.question));
 renderChips();renderExercises();renderLogs();updateStats();
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
-</script></body></html>
+</script>
+<script>
+(function(){
+const statusEl=document.getElementById("accountStatus"),badge=document.getElementById("accountBadge");
+const authFields=document.getElementById("authFields"),signedActions=document.getElementById("signedInActions");
+if(!window.firebase||!window.MNS_FIREBASE_CONFIG){statusEl.textContent="خدمة الحسابات مش متاحة دلوقتي. تقدر تستخدم التطبيق كضيف، وسجلك هيفضل على الجهاز.";return}
+let auth,db,currentUser=null,syncTimer=null,hydrating=false;
+try{if(!firebase.apps.length)firebase.initializeApp(window.MNS_FIREBASE_CONFIG);auth=firebase.auth();db=firebase.firestore()}catch(e){statusEl.textContent="تعذر تهيئة خدمة الحسابات. جرّب تحديث الصفحة.";return}
+const setStatus=msg=>{statusEl.textContent=msg};
+const userDoc=uid=>db.collection("gymUsers").doc(uid).collection("private").doc("data");
+function mergeById(local,remote,key){const map=new Map();[...(Array.isArray(remote)?remote:[]),...(Array.isArray(local)?local:[])].forEach(x=>{if(x&&x[key]!==undefined)map.set(String(x[key]),x)});return [...map.values()].sort((a,b)=>String(b.date||b.savedAt||"").localeCompare(String(a.date||a.savedAt||"")))}
+async function syncNow(showMessage=true){if(!currentUser)return;const data=window.__gymCoachGetData();const payload={logs:data.logs.slice(0,300),plans:data.plans.slice(0,30),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};await userDoc(currentUser.uid).set(payload,{merge:true});if(showMessage)setStatus("اتعملت مزامنة لسجلك وجدولك بنجاح ☁️")}
+async function loadAccountData(user){hydrating=true;window.__gymCoachLoadLocalScope(user.uid);try{const snap=await userDoc(user.uid).get();const local=window.__gymCoachGetData();if(snap.exists){const cloud=snap.data()||{};const merged={logs:mergeById(local.logs,cloud.logs,"id").slice(0,300),plans:mergeById(local.plans,cloud.plans,"savedAt").slice(0,30)};window.__gymCoachApplyCloudData(merged)}await syncNow(false);setStatus("حسابك متصل، وسجل التمرين والجداول محفوظين على حسابك.")}catch(e){console.error("Gym Coach cloud sync",e);setStatus("دخلت حسابك، لكن المزامنة محتاجة نشر قواعد Firestore الجديدة من ملف firestore.rules.")}finally{hydrating=false}}
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
+auth.onAuthStateChanged(async user=>{currentUser=user||null;if(user){authFields.classList.add("hidden");signedActions.classList.remove("hidden");badge.textContent="حساب متصل";document.getElementById("accountEmail").textContent=user.displayName?user.displayName+" · "+user.email:user.email;await loadAccountData(user)}else{authFields.classList.remove("hidden");signedActions.classList.add("hidden");badge.textContent="ضيف";window.__gymCoachLoadLocalScope("guest");setStatus("أنت بتستخدم التطبيق كضيف. بياناتك محفوظة على الجهاز الحالي؛ سجّل حساب عشان تزامنها بين أجهزتك.")}});
+async function signIn(){const email=document.getElementById("authEmail").value.trim(),password=document.getElementById("authPassword").value;if(!email||!password){setStatus("اكتب البريد الإلكتروني وكلمة المرور الأول.");return}try{setStatus("جاري تسجيل الدخول...");await auth.signInWithEmailAndPassword(email,password)}catch(e){setStatus(authMessage(e))}}
+async function signUp(){const email=document.getElementById("authEmail").value.trim(),password=document.getElementById("authPassword").value,name=document.getElementById("authName").value.trim();if(!email||password.length<8){setStatus("اكتب بريد صحيح وكلمة مرور 8 أحرف على الأقل.");return}try{setStatus("جاري إنشاء الحساب...");const cred=await auth.createUserWithEmailAndPassword(email,password);if(name)await cred.user.updateProfile({displayName:name})}catch(e){setStatus(authMessage(e))}}
+function authMessage(e){const m={"auth/email-already-in-use":"البريد ده مسجل قبل كده. جرّب تسجيل الدخول.","auth/invalid-email":"صيغة البريد الإلكتروني مش صحيحة.","auth/weak-password":"كلمة المرور ضعيفة؛ استخدم 8 أحرف على الأقل.","auth/user-not-found":"مفيش حساب بالبريد ده.","auth/wrong-password":"كلمة المرور غير صحيحة.","auth/invalid-credential":"بيانات الدخول مش صحيحة.","auth/too-many-requests":"محاولات كتير؛ استنى شوية وجرب تاني.","auth/network-request-failed":"راجع اتصال الإنترنت وجرب تاني."};return m[e.code]||"حصلت مشكلة: "+(e.message||"حاول مرة تانية")}
+document.getElementById("signInBtn").onclick=signIn;document.getElementById("signUpBtn").onclick=signUp;
+document.getElementById("resetPasswordBtn").onclick=async()=>{const email=document.getElementById("authEmail").value.trim();if(!email){setStatus("اكتب بريدك الإلكتروني الأول عشان نبعتلك رابط إعادة التعيين.");return}try{await auth.sendPasswordResetEmail(email);setStatus("لو البريد مسجل، هيوصلك رابط إعادة تعيين كلمة المرور.")}catch(e){setStatus(authMessage(e))}};
+document.getElementById("signOutBtn").onclick=()=>auth.signOut().catch(e=>setStatus(authMessage(e)));
+document.getElementById("syncNowBtn").onclick=()=>syncNow(true).catch(e=>setStatus("المزامنة فشلت. اتأكد إن قواعد Firestore الجديدة اتنشرت، وجرب تاني."));
+window.addEventListener("gymcoach-data-changed",()=>{if(!currentUser||hydrating)return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncNow(false).catch(e=>setStatus("التسجيل محفوظ على الجهاز، لكن المزامنة السحابية فشلت. راجع قواعد Firestore.")),1000)});
+})();
+</script>
+</body></html>
