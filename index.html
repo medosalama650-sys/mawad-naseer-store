@@ -117,6 +117,7 @@ footer{text-align:center;color:#748477;font-size:10px;padding:18px 10px}
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="./firebase-config.js"></script>
 <script>
+const $=id=>document.getElementById(id);
 const EXERCISES=[
 {id:"chest-press",name:"ضغط صدر بالماكينة",muscle:"صدر",tool:"ماكينة",icon:"🏋️",desc:"تمرين للعضلات الأمامية للصدر، والماكينة بتساعدك تثبت مسار الحركة.",steps:["ظبط الكرسي بحيث المقابض تبقى في مستوى منتصف الصدر تقريبًا.","اسند ضهرك وخلي رجليك ثابتة على الأرض.","ادفع لقدام بهدوء من غير قفل مفصل الكوع بعنف.","ارجع ببطء لحد مدى حركة مريح من غير ما تزق كتفك لورا زيادة."],tip:"ابدأ بمقاومة خفيفة واتأكد إن الكرسي مناسب لطولك."},
 {id:"pushup",name:"ضغط أرضي",muscle:"صدر",tool:"وزن الجسم",icon:"🤸",desc:"تمرين بوزن الجسم بيشغل الصدر والكتف الأمامي والترايسبس.",steps:["حط إيديك أوسع شوية من عرض الكتفين.","خلي جسمك في خط واحد من الرأس للكعب.","انزل بتحكم وخلي الكوع بزاوية مريحة.","ادفع الأرض وارجع لوضع البداية. ممكن تبدأ على سطح مرتفع لو صعب."],tip:"لو حسيت بألم في الرسغ أو الكتف، وقف وعدّل الوضع أو اختار بديل مناسب."},
@@ -146,7 +147,7 @@ const EQUIPMENT=[
 function renderEquipment(){const q=$("equipmentSearch").value.trim().toLowerCase();const items=EQUIPMENT.filter(x=>x.name.toLowerCase().includes(q)||x.purpose.toLowerCase().includes(q));$("equipmentList").innerHTML=items.map(x=>'<article class="exercise"><div class="exercise-icon">'+x.icon+'</div><div><h3>'+x.name+'</h3><p>'+x.purpose+'</p></div><button class="btn secondary" data-device="'+x.id+'">شرح الجهاز</button></article>').join("");$("equipmentList").querySelectorAll("[data-device]").forEach(b=>b.onclick=()=>{const x=EQUIPMENT.find(v=>v.id===b.dataset.device);$("dialogTitle").textContent=x.icon+" "+x.name;$("dialogBody").innerHTML='<p class="muted">'+x.purpose+'</p><h3>قبل ما تبدأ</h3><ol class="steps">'+x.steps.map(s=>'<li>'+s+'</li>').join("")+'</ol><div class="notice">تنبيه الكابتن: '+x.warning+'</div><p class="muted">الشرح للتوعية العامة. اتبع دليل الشركة المصنّعة وتعليمات مدرب الجيم.</p>';$("exerciseDialog").showModal()})}
 $("equipmentSearch").addEventListener("input",renderEquipment);
 
-const $=id=>document.getElementById(id);
+
 window.GYMCOACH_STORAGE_SCOPE="guest";
 const storageKey=k=>"gymcoach_"+(window.GYMCOACH_STORAGE_SCOPE||"guest")+"_"+k;
 const read=(k,d)=>{try{const v=localStorage.getItem(storageKey(k));if(v!==null)return JSON.parse(v);if((window.GYMCOACH_STORAGE_SCOPE||"guest")==="guest"){const legacy=localStorage.getItem("gymcoach_"+k);if(legacy!==null)return JSON.parse(legacy)}return d}catch{return d}};
