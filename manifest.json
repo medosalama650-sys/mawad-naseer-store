@@ -1,14 +1,14 @@
 {
-  "name": "معوض نصير ستور",
-  "short_name": "معوض نصير",
-  "description": "تطبيق معوض نصير لطلبات الجملة والمستلزمات التجارية",
+  "name": "كابتن الجيم | Gym Coach",
+  "short_name": "كابتن الجيم",
+  "description": "كابتنك معاك في كل تمرينة - شرح التمارين والأجهزة بالمصري",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#080d09",
-  "theme_color": "#080d09",
+  "background_color": "#080e0a",
+  "theme_color": "#09110d",
   "icons": [
     {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}
   ]
