@@ -88,6 +88,23 @@ service cloud.firestore {
       allow delete: if isAdmin() || (request.auth != null && request.auth.uid == tokenId);
     }
 
+
+    // بيانات كابتن الجيم: كل مستخدم يصل إلى سجله وجداوله فقط.
+    match /gymUsers/{userId}/private/{docId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && docId == 'data'
+        && request.resource.data.keys().hasAll(['logs','plans','updatedAt'])
+        && request.resource.data.keys().hasOnly(['logs','plans','updatedAt'])
+        && request.resource.data.logs is list
+        && request.resource.data.logs.size() <= 300
+        && request.resource.data.plans is list
+        && request.resource.data.plans.size() <= 30
+        && request.resource.data.updatedAt is timestamp;
+      allow delete: if request.auth != null && request.auth.uid == userId && docId == 'data';
+    }
+
     // يمنع الوصول لأي مجموعة أخرى افتراضيًا.
     match /{document=**} {
       allow read, write: if false;

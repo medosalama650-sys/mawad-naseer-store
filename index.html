@@ -27,6 +27,7 @@ dialog{width:min(92vw,560px);max-height:88dvh;overflow:auto;background:#111b14;c
 footer{text-align:center;color:#748477;font-size:10px;padding:18px 10px}
 @media(min-width:620px){main{padding:22px 20px 35px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.exercise-list{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:30px}.food-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:380px){main{padding-inline:10px}.pill{display:none}.form-grid{grid-template-columns:1fr}.exercise{grid-template-columns:47px minmax(0,1fr) auto;gap:8px}.exercise-icon{width:47px;height:47px}.nav{font-size:8px}}
+.accountPanel{overflow:hidden}
 </style></head>
 <body>
 <header><div class="head"><div class="logo">🏋️</div><div class="brand"><b>كابتن الجيم</b><small>كابتنك معاك في كل تمرينة</small></div><span class="pill">نسخة تجريبية</span></div></header>
@@ -45,6 +46,19 @@ footer{text-align:center;color:#748477;font-size:10px;padding:18px 10px}
 <div class="section-head"><div><h2>ملخص نشاطك</h2><p>المعلومات المسجلة على الجهاز ده</p></div></div>
 <div class="stats"><div class="stat"><b id="statLogs">0</b><small>تسجيل تمرين</small></div><div class="stat"><b id="statExercises">0</b><small>تمرين في المكتبة</small></div><div class="stat"><b id="statPlans">0</b><small>جدول محفوظ</small></div></div>
 <div class="notice">ابدأ بالتدريج، واتعلم الحركة الصح قبل زيادة الحمل. لو عندك إصابة أو حالة صحية، استشير مختص قبل بدء برنامج جديد.</div>
+<div class="panel" id="accountPanel">
+<div class="dialog-top"><h3>حسابك ومزامنة تقدمك ☁️</h3><span class="tag" id="accountBadge">ضيف</span></div>
+<p class="muted" id="accountStatus" role="status">تقدر تستخدم التطبيق كضيف، أو تعمل حساب عشان تحفظ جدولك وسجل تمرينك على حسابك.</p>
+<div id="authFields">
+<label for="authName">اسمك (اختياري عند إنشاء الحساب)</label><input id="authName" autocomplete="name" placeholder="اسمك">
+<label for="authEmail">البريد الإلكتروني</label><input id="authEmail" type="email" autocomplete="email" placeholder="name@example.com">
+<label for="authPassword">كلمة المرور</label><input id="authPassword" type="password" autocomplete="current-password" minlength="8" placeholder="8 أحرف على الأقل">
+<div class="actions"><button class="btn primary" id="signInBtn" type="button">تسجيل الدخول</button><button class="btn secondary" id="signUpBtn" type="button">إنشاء حساب جديد</button></div>
+<button class="btn ghost" id="resetPasswordBtn" type="button">نسيت كلمة المرور؟</button>
+</div>
+<div id="signedInActions" class="hidden"><p class="muted" id="accountEmail"></p><div class="actions"><button class="btn secondary" id="syncNowBtn" type="button">مزامنة دلوقتي</button><button class="btn ghost" id="signOutBtn" type="button">تسجيل الخروج</button></div></div>
+<div class="notice">كل حساب له سجل منفصل. بيانات الضيف القديمة تفضل على نفس الجهاز، ومش بتتنقل لحساب جديد تلقائيًا. استخدم كلمة مرور خاصة بيك وماتشاركهاش.</div>
+</div>
 </section>
 <section id="exercises" class="view">
 <div class="view-title"><h1>مكتبة التمارين 🏋️</h1><p>اختار العضلة وشوف شرح مبسط لطريقة التمرين.</p></div>
@@ -91,6 +105,10 @@ footer{text-align:center;color:#748477;font-size:10px;padding:18px 10px}
 <button class="nav active" data-go="home"><span>⌂</span>الرئيسية</button><button class="nav" data-go="exercises"><span>🏋️</span>التمارين</button><button class="nav" data-go="plan"><span>📅</span>جدولي</button><button class="nav" data-go="food"><span>🥗</span>التغذية</button><button class="nav" data-go="progress"><span>📈</span>تقدمي</button>
 </div></nav>
 <dialog id="exerciseDialog"><div class="dialog-top"><h2 id="dialogTitle"></h2><button class="btn secondary" id="closeDialog">إغلاق</button></div><div id="dialogBody"></div></dialog>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="./firebase-config.js"></script>
 <script>
 const EXERCISES=[
 {id:"chest-press",name:"ضغط صدر بالماكينة",muscle:"صدر",tool:"ماكينة",icon:"🏋️",desc:"تمرين للعضلات الأمامية للصدر، والماكينة بتساعدك تثبت مسار الحركة.",steps:["ظبط الكرسي بحيث المقابض تبقى في مستوى منتصف الصدر تقريبًا.","اسند ضهرك وخلي رجليك ثابتة على الأرض.","ادفع لقدام بهدوء من غير قفل مفصل الكوع بعنف.","ارجع ببطء لحد مدى حركة مريح من غير ما تزق كتفك لورا زيادة."],tip:"ابدأ بمقاومة خفيفة واتأكد إن الكرسي مناسب لطولك."},
@@ -106,8 +124,15 @@ const EXERCISES=[
 {id:"triceps-pushdown",name:"ضغط ترايسبس بالكابل",muscle:"ذراع",tool:"كابل",icon:"⬇️",desc:"تمرين لعضلة الترايسبس خلف الذراع.",steps:["قف قدام الكابل وامسك المقبض.","ثبت الكوع جنب جسمك.","ادفع المقبض لتحت لحد قرب فرد الذراع.","ارجع ببطء مع ثبات الكوع."],tip:"لو الكوع بيتحرك لقدام وورا كتير، خفف المقاومة."},
 {id:"plank",name:"بلانك",muscle:"بطن",tool:"وزن الجسم",icon:"🧘",desc:"تمرين ثبات لعضلات الجذع.",steps:["اسند على الساعدين وأطراف القدمين، أو ابدأ على الركبتين.","خلي الرأس والظهر والحوض في خط مريح.","شد عضلات البطن بشكل طبيعي واستمر مع التنفس.","انهي المجموعة قبل ما وضع الجسم ينهار."],tip:"مش لازم تطول في الوقت؛ الجودة أهم من المدة."}
 ];
-const $=id=>document.getElementById(id);const read=(k,d)=>{try{return JSON.parse(localStorage.getItem("gymcoach_"+k))??d}catch{return d}};const write=(k,v)=>localStorage.setItem("gymcoach_"+k,JSON.stringify(v));
+const $=id=>document.getElementById(id);
+window.GYMCOACH_STORAGE_SCOPE="guest";
+const storageKey=k=>"gymcoach_"+(window.GYMCOACH_STORAGE_SCOPE||"guest")+"_"+k;
+const read=(k,d)=>{try{const v=localStorage.getItem(storageKey(k));if(v!==null)return JSON.parse(v);if((window.GYMCOACH_STORAGE_SCOPE||"guest")==="guest"){const legacy=localStorage.getItem("gymcoach_"+k);if(legacy!==null)return JSON.parse(legacy)}return d}catch{return d}};
+const write=(k,v)=>{localStorage.setItem(storageKey(k),JSON.stringify(v));if(!window.__gymCoachApplyingCloud)window.dispatchEvent(new CustomEvent("gymcoach-data-changed",{detail:{key:k}}))};
 let activeMuscle="الكل",logs=read("logs",[]),plans=read("plans",[]);
+window.__gymCoachLoadLocalScope=function(scope){window.GYMCOACH_STORAGE_SCOPE=scope||"guest";logs=read("logs",[]);plans=read("plans",[]);renderLogs();updateStats()};
+window.__gymCoachApplyCloudData=function(data){window.__gymCoachApplyingCloud=true;logs=Array.isArray(data.logs)?data.logs:[];plans=Array.isArray(data.plans)?data.plans:[];localStorage.setItem(storageKey("logs"),JSON.stringify(logs));localStorage.setItem(storageKey("plans"),JSON.stringify(plans));window.__gymCoachApplyingCloud=false;renderLogs();updateStats()};
+window.__gymCoachGetData=()=>({logs,plans});
 function go(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b.dataset.go===id));window.scrollTo({top:0,behavior:"smooth"});if(id==="progress")renderLogs();if(id==="exercises")renderExercises();updateStats()}
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
 const muscles=["الكل","صدر","ظهر","كتف","رجل","ذراع","بطن"];
@@ -130,4 +155,29 @@ $("chatForm").onsubmit=e=>{e.preventDefault();const q=$("chatInput").value.trim(
 document.querySelectorAll("[data-question]").forEach(b=>b.onclick=()=>sendChat(b.dataset.question));
 renderChips();renderExercises();renderLogs();updateStats();
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
-</script></body></html>
+</script>
+<script>
+(function(){
+const statusEl=document.getElementById("accountStatus"),badge=document.getElementById("accountBadge");
+const authFields=document.getElementById("authFields"),signedActions=document.getElementById("signedInActions");
+if(!window.firebase||!window.MNS_FIREBASE_CONFIG){statusEl.textContent="خدمة الحسابات مش متاحة دلوقتي. تقدر تستخدم التطبيق كضيف، وسجلك هيفضل على الجهاز.";return}
+let auth,db,currentUser=null,syncTimer=null,hydrating=false;
+try{if(!firebase.apps.length)firebase.initializeApp(window.MNS_FIREBASE_CONFIG);auth=firebase.auth();db=firebase.firestore()}catch(e){statusEl.textContent="تعذر تهيئة خدمة الحسابات. جرّب تحديث الصفحة.";return}
+const setStatus=msg=>{statusEl.textContent=msg};
+const userDoc=uid=>db.collection("gymUsers").doc(uid).collection("private").doc("data");
+function mergeById(local,remote,key){const map=new Map();[...(Array.isArray(remote)?remote:[]),...(Array.isArray(local)?local:[])].forEach(x=>{if(x&&x[key]!==undefined)map.set(String(x[key]),x)});return [...map.values()].sort((a,b)=>String(b.date||b.savedAt||"").localeCompare(String(a.date||a.savedAt||"")))}
+async function syncNow(showMessage=true){if(!currentUser)return;const data=window.__gymCoachGetData();const payload={logs:data.logs.slice(0,300),plans:data.plans.slice(0,30),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};await userDoc(currentUser.uid).set(payload,{merge:true});if(showMessage)setStatus("اتعملت مزامنة لسجلك وجدولك بنجاح ☁️")}
+async function loadAccountData(user){hydrating=true;window.__gymCoachLoadLocalScope(user.uid);try{const snap=await userDoc(user.uid).get();const local=window.__gymCoachGetData();if(snap.exists){const cloud=snap.data()||{};const merged={logs:mergeById(local.logs,cloud.logs,"id").slice(0,300),plans:mergeById(local.plans,cloud.plans,"savedAt").slice(0,30)};window.__gymCoachApplyCloudData(merged)}await syncNow(false);setStatus("حسابك متصل، وسجل التمرين والجداول محفوظين على حسابك.")}catch(e){console.error("Gym Coach cloud sync",e);setStatus("دخلت حسابك، لكن المزامنة محتاجة نشر قواعد Firestore الجديدة من ملف firestore.rules.")}finally{hydrating=false}}
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
+auth.onAuthStateChanged(async user=>{currentUser=user||null;if(user){authFields.classList.add("hidden");signedActions.classList.remove("hidden");badge.textContent="حساب متصل";document.getElementById("accountEmail").textContent=user.displayName?user.displayName+" · "+user.email:user.email;await loadAccountData(user)}else{authFields.classList.remove("hidden");signedActions.classList.add("hidden");badge.textContent="ضيف";window.__gymCoachLoadLocalScope("guest");setStatus("أنت بتستخدم التطبيق كضيف. بياناتك محفوظة على الجهاز الحالي؛ سجّل حساب عشان تزامنها بين أجهزتك.")}});
+async function signIn(){const email=document.getElementById("authEmail").value.trim(),password=document.getElementById("authPassword").value;if(!email||!password){setStatus("اكتب البريد الإلكتروني وكلمة المرور الأول.");return}try{setStatus("جاري تسجيل الدخول...");await auth.signInWithEmailAndPassword(email,password)}catch(e){setStatus(authMessage(e))}}
+async function signUp(){const email=document.getElementById("authEmail").value.trim(),password=document.getElementById("authPassword").value,name=document.getElementById("authName").value.trim();if(!email||password.length<8){setStatus("اكتب بريد صحيح وكلمة مرور 8 أحرف على الأقل.");return}try{setStatus("جاري إنشاء الحساب...");const cred=await auth.createUserWithEmailAndPassword(email,password);if(name)await cred.user.updateProfile({displayName:name})}catch(e){setStatus(authMessage(e))}}
+function authMessage(e){const m={"auth/email-already-in-use":"البريد ده مسجل قبل كده. جرّب تسجيل الدخول.","auth/invalid-email":"صيغة البريد الإلكتروني مش صحيحة.","auth/weak-password":"كلمة المرور ضعيفة؛ استخدم 8 أحرف على الأقل.","auth/user-not-found":"مفيش حساب بالبريد ده.","auth/wrong-password":"كلمة المرور غير صحيحة.","auth/invalid-credential":"بيانات الدخول مش صحيحة.","auth/too-many-requests":"محاولات كتير؛ استنى شوية وجرب تاني.","auth/network-request-failed":"راجع اتصال الإنترنت وجرب تاني."};return m[e.code]||"حصلت مشكلة: "+(e.message||"حاول مرة تانية")}
+document.getElementById("signInBtn").onclick=signIn;document.getElementById("signUpBtn").onclick=signUp;
+document.getElementById("resetPasswordBtn").onclick=async()=>{const email=document.getElementById("authEmail").value.trim();if(!email){setStatus("اكتب بريدك الإلكتروني الأول عشان نبعتلك رابط إعادة التعيين.");return}try{await auth.sendPasswordResetEmail(email);setStatus("لو البريد مسجل، هيوصلك رابط إعادة تعيين كلمة المرور.")}catch(e){setStatus(authMessage(e))}};
+document.getElementById("signOutBtn").onclick=()=>auth.signOut().catch(e=>setStatus(authMessage(e)));
+document.getElementById("syncNowBtn").onclick=()=>syncNow(true).catch(e=>setStatus("المزامنة فشلت. اتأكد إن قواعد Firestore الجديدة اتنشرت، وجرب تاني."));
+window.addEventListener("gymcoach-data-changed",()=>{if(!currentUser||hydrating)return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncNow(false).catch(e=>setStatus("التسجيل محفوظ على الجهاز، لكن المزامنة السحابية فشلت. راجع قواعد Firestore.")),1000)});
+})();
+</script>
+</body></html>
