@@ -27,6 +27,7 @@ dialog{width:min(92vw,560px);max-height:88dvh;overflow:auto;background:#111b14;c
 footer{text-align:center;color:#748477;font-size:10px;padding:18px 10px}
 @media(min-width:620px){main{padding:22px 20px 35px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.exercise-list{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{padding:30px}.food-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:380px){main{padding-inline:10px}.pill{display:none}.form-grid{grid-template-columns:1fr}.exercise{grid-template-columns:47px minmax(0,1fr) auto;gap:8px}.exercise-icon{width:47px;height:47px}.nav{font-size:8px}}
+.week-list{display:grid;gap:10px}.week-day{background:#121e15;border:1px solid var(--line);border-radius:16px;padding:13px}.week-day.rest{background:#151a15;border-style:dashed}.week-day h3{font-size:14px;margin:0;color:var(--gold2)}.week-day p{font-size:11px;color:var(--muted);margin:4px 0}.week-ex{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-top:1px solid #293b2d;font-size:11px}.week-ex a,.video-link{color:var(--gold2);text-decoration:none;font-size:10px;white-space:nowrap}.set-row{display:grid;grid-template-columns:34px 1fr 1fr;gap:7px;align-items:center;margin:7px 0}.set-row input{padding:9px;font-size:13px}.set-row b{font-size:11px;color:var(--gold2)}.draft-ex{padding:10px;background:#17251a;border:1px solid var(--line);border-radius:12px;margin:8px 0}.history-card{background:#121e15;border:1px solid var(--line);border-radius:15px;padding:12px;margin:9px 0}.history-card h4{font-size:13px;margin:0}.history-card p{font-size:10px;color:var(--muted);margin:4px 0}.history-set{font-size:11px;color:#dce5dc;padding:3px 0}.meal-day{padding:10px;background:#121e15;border:1px solid var(--line);border-radius:13px;margin:7px 0}.meal-day b{color:var(--gold2);font-size:12px}.meal-day p{font-size:11px;color:#dce5dc;margin:4px 0}
 .accountPanel{overflow:hidden}
 </style></head>
 <body>
@@ -39,7 +40,7 @@ footer{text-align:center;color:#748477;font-size:10px;padding:18px 10px}
 <button class="card feature" data-go="coach"><span class="ico">🤖</span><span><b>اسأل الكابتن</b><small>اسأل عن التمرين والأجهزة</small></span></button>
 <button class="card feature" data-go="exercises"><span class="ico">🏋️</span><span><b>مكتبة التمارين</b><small>شرح العضلات وطريقة الأداء</small></span></button>
 <button class="card feature" data-go="equipment"><span class="ico">⚙️</span><span><b>تعليم الأجهزة</b><small>اعرف ضبط كل جهاز واستخدامه</small></span></button>
-<button class="card feature" data-go="plan"><span class="ico">📅</span><span><b>جدول التمرين</b><small>خطة حسب مستواك وأيامك</small></span></button>
+<button class="card feature" data-go="myweek"><span class="ico">📅</span><span><b>جدولي الشخصي</b><small>4 أيام تمرين و3 أيام راحة</small></span></button>
 <button class="card feature" data-go="food"><span class="ico">🥗</span><span><b>التغذية</b><small>أساسيات الأكل المتوازن</small></span></button>
 <button class="card feature" data-go="progress"><span class="ico">📈</span><span><b>سجل تقدمك</b><small>تابع الأوزان والتكرارات</small></span></button>
 <button class="card feature" data-go="coach"><span class="ico">💬</span><span><b>مصطلحات الجيم</b><small>افهم كلام الكباتن</small></span></button>
@@ -81,25 +82,48 @@ footer{text-align:center;color:#748477;font-size:10px;padding:18px 10px}
 <div id="planResult" class="panel hidden"><div class="dialog-top"><h3>جدولك المقترح</h3><button class="btn secondary" id="savePlan">حفظ الجدول</button></div><p class="muted" id="planIntro"></p><div id="planDays"></div><p class="muted">ده نموذج عام قابل للتعديل حسب إمكانيات الجيم وراحتك. سيب وقت راحة كفاية بين المجموعات، ومتتمرنش على ألم.</p></div>
 </section>
 <section id="food" class="view">
-<div class="view-title"><h1>التغذية ببساطة 🥗</h1><p>معلومات عامة تساعدك تختار أكل متوازن من غير حرمان أو أنظمة قاسية.</p></div>
-<div class="notice">التطبيق مش بديل لطبيب أو أخصائي تغذية، ومش بيشخّص حالات أو يحدد احتياجات علاجية.</div>
-<div class="food-grid">
-<div class="food-card"><b>🍗 البروتين</b><p>موجود في البيض والفول والعدس والزبادي والسمك والدجاج. نوّع مصادر أكلك خلال الأسبوع.</p></div>
-<div class="food-card"><b>🍚 النشويات</b><p>زي الرز والعيش والبطاطس والشوفان؛ بتساعد الجسم يوفر طاقة للحركة والتمرين.</p></div>
-<div class="food-card"><b>🥑 الدهون المفيدة</b><p>زي المكسرات وزيت الزيتون والطحينة. خلي أكلك متنوع ومتوازن.</p></div>
-<div class="food-card"><b>🥦 الخضار والفاكهة</b><p>مصادر للألياف والفيتامينات والمعادن. حاول تدخل ألوان مختلفة في يومك.</p></div>
-<div class="food-card"><b>💧 المياه</b><p>اشرب على مدار اليوم، وزوّد اهتمامك بالسوائل مع الحر والعرق.</p></div>
-<div class="food-card"><b>😴 الراحة</b><p>النوم والراحة جزء أساسي من التعافي وتحسين الأداء، مش وقت ضايع.</p></div>
+<div class="view-title"><h1>نظام أكلك 🥗</h1><p>الخطة الأسبوعية المسجلة عندنا، مع مرونة في الاختيارات حسب يومك والجيم.</p></div>
+<div class="notice">دي الخطة اللي كانت محفوظة في صورة نظامك. خلي الوجبات مرنة ومتوازنة، ومش مطلوب تجوّع نفسك أو تلغي وجبة لو يومك اتغير.</div>
+<div class="panel"><h3>الفطار اليومي</h3><ul class="steps"><li>نصف رغيف بلدي.</li><li>100–150 جم جبنة زبادي.</li><li>خيار أو طماطم.</li><li>كوب شاي بسكر قليل.</li></ul></div>
+<div class="panel"><h3>سناك بين الوجبات</h3><p class="muted">ثمرة فاكهة متوسطة: تفاح أو برتقال أو موز أو جوافة.</p></div>
+<div class="panel"><h3>الغداء حسب اليوم</h3>
+<div class="meal-day"><b>السبت</b><p>فراخ + 6–8 معالق رز + سلطة.</p></div>
+<div class="meal-day"><b>الأحد</b><p>سمك + 6–8 معالق رز + سلطة.</p></div>
+<div class="meal-day"><b>الاثنين</b><p>بطاطس + 2 بيضة + سلطة.</p></div>
+<div class="meal-day"><b>الثلاثاء</b><p>فراخ + 6–8 معالق رز + سلطة.</p></div>
+<div class="meal-day"><b>الأربعاء</b><p>سمك + 6–8 معالق رز + سلطة.</p></div>
+<div class="meal-day"><b>الخميس</b><p>بطاطس + تونة أو بيض + سلطة.</p></div>
+<div class="meal-day"><b>الجمعة</b><p>فراخ + 6–8 معالق رز + سلطة.</p></div>
 </div>
-<div class="panel"><h3>مثال ليوم متوازن</h3><ul class="steps"><li>فطار: بيض أو فول + عيش + خضار.</li><li>غدا: مصدر بروتين + رز أو بطاطس + سلطة.</li><li>سناك: فاكهة أو زبادي أو حفنة مكسرات.</li><li>عشا: جبنة أو زبادي أو فول + خضار وعيش حسب احتياجك.</li></ul><p class="muted">مثال مرن، مش نظام إلزامي ولا خطة علاجية. الكميات تختلف حسب العمر والنشاط والحالة الصحية.</p></div>
+<div class="panel"><h3>العشاء بعد الجيم</h3><ul class="steps"><li>تونة + نصف رغيف.</li><li>أو 2 بيضة + عيش.</li><li>أو جبنة زبادي + عيش.</li><li>مع خضار حسب المتاح.</li></ul><p class="muted">اختار وجبة مناسبة ومشبعة؛ مش لازم تلتزم باختيار واحد كل يوم.</p></div>
+</section><section id="myweek" class="view">
+<div class="view-title"><h1>جدولي الشخصي 💪</h1><p>برنامجك المعتمد: 4 أيام تمرين و3 أيام راحة. كل تمرين له شرح فيديو وسجل منفصل.</p></div>
+<div class="notice">التزم بالبرنامج اللي راجعناه معًا. النطاق المسجل 8–12 تكرار، وراحة 2–3 دقائق في التمارين الأساسية، وعدّل الحمل حسب قدرتك وجودة الأداء.</div>
+<div id="personalWeek" class="week-list"></div>
 </section>
 <section id="progress" class="view">
-<div class="view-title"><h1>سجل تقدمك 📈</h1><p>سجّل أداءك عشان تلاحظ تطورك مع الوقت.</p></div>
-<div class="panel"><h3>إضافة تمرينة</h3><label for="logExercise">اسم التمرين</label><input id="logExercise" list="exerciseOptions" placeholder="مثال: ضغط صدر بالدمبل"><datalist id="exerciseOptions"></datalist>
-<div class="form-grid"><div><label for="logSets">المجموعات</label><input id="logSets" type="number" min="1" max="20" value="3"></div><div><label for="logReps">التكرارات</label><input id="logReps" type="number" min="1" max="100" value="10"></div><div><label for="logWeight">الوزن (كجم) - اختياري</label><input id="logWeight" type="number" min="0" step="0.5" placeholder="مثال: 10"></div><div><label for="logDate">التاريخ</label><input id="logDate" type="date"></div></div><button class="btn primary" id="addLog" style="width:100%;margin-top:13px">حفظ في سجلي</button><p class="muted" id="logMessage" role="status"></p></div>
-<div class="panel"><div class="dialog-top"><h3>آخر تسجيلاتك</h3><button class="btn danger" id="clearLogs">مسح السجل</button></div><div id="logsList" class="muted">لسه مفيش تسجيلات.</div></div>
-</section>
-<section id="coach" class="view">
+<div class="view-title"><h1>سجل التمرين 📈</h1><p>سجّل كل تمرين وكل مجموعة لوحدها، وارجع لأي يوم بالاسم والتاريخ والساعة.</p></div>
+<div class="panel">
+<h3>تسجيل جلسة تمرين جديدة</h3>
+<label for="sessionName">اسم اليوم أو الجلسة</label><input id="sessionName" placeholder="مثال: اليوم الأول — صدر وظهر">
+<div class="form-grid"><div><label for="sessionDate">التاريخ</label><input id="sessionDate" type="date"></div><div><label for="sessionTime">الساعة</label><input id="sessionTime" type="time"></div></div>
+<h3 style="margin-top:15px">إضافة تمرين للجلسة</h3>
+<label for="sessionExercise">اسم التمرين</label><input id="sessionExercise" list="exerciseOptions" placeholder="اكتب اسم التمرين"><datalist id="exerciseOptions"></datalist>
+<div class="dialog-top"><span class="muted">سجّل وزن وتكرارات كل مجموعة بشكل مستقل</span><button class="btn secondary" id="addSetRow" type="button">＋ مجموعة</button></div>
+<div class="set-row"><b>مجموعة</b><span class="muted">الوزن (كجم)</span><span class="muted">التكرارات</span></div>
+<div id="setRows"></div>
+<button class="btn secondary" id="addExerciseToSession" type="button" style="width:100%;margin-top:10px">إضافة التمرين للجلسة</button>
+<div id="sessionDraft" class="panel"><p class="muted">لسه مضافش تمارين للجلسة.</p></div>
+<button class="btn primary" id="saveWorkoutSession" type="button" style="width:100%;margin-top:10px">حفظ الجلسة كاملة</button>
+<p class="muted" id="logMessage" role="status"></p>
+</div>
+<div class="panel">
+<h3>الأرشيف — كل جلساتك</h3>
+<input class="search" id="historySearch" placeholder="ابحث باسم اليوم أو التمرين...">
+<label for="historyDate">تصفية بالتاريخ</label><input id="historyDate" type="date">
+<div id="logsList" class="muted">لسه مفيش جلسات محفوظة.</div>
+</div>
+</section><section id="coach" class="view">
 <div class="view-title"><h1>اسأل الكابتن 🤖</h1><p>مساعد إرشادي تجريبي بيرد بالمصري على الأسئلة الشائعة.</p></div>
 <div class="notice">المساعد الحالي بيعتمد على مكتبة إجابات داخل التطبيق، مش محادثة ذكاء اصطناعي متصلة بالإنترنت. هنقدر نوصله بخدمة ذكاء اصطناعي لاحقًا بعد إعداد آمن لمفتاح الخدمة.</div>
 <div class="chips"><button data-question="إزاي أبدأ الجيم وأنا مبتدئ؟">أنا مبتدئ</button><button data-question="يعني إيه تسخين؟">يعني إيه تسخين؟</button><button data-question="إزاي أستخدم الأجهزة؟">شرح الأجهزة</button><button data-question="يعني إيه سوبر سيت؟">مصطلحات الجيم</button></div>
@@ -109,7 +133,7 @@ footer{text-align:center;color:#748477;font-size:10px;padding:18px 10px}
 <footer>كابتن الجيم · اتعلم الحركة الصح وخلي التمرين عادة صحية.</footer>
 </main>
 <nav class="bottom-nav"><div class="nav-inner">
-<button class="nav active" data-go="home"><span>⌂</span>الرئيسية</button><button class="nav" data-go="exercises"><span>🏋️</span>التمارين</button><button class="nav" data-go="plan"><span>📅</span>جدولي</button><button class="nav" data-go="food"><span>🥗</span>التغذية</button><button class="nav" data-go="progress"><span>📈</span>تقدمي</button>
+<button class="nav active" data-go="home"><span>⌂</span>الرئيسية</button><button class="nav" data-go="exercises"><span>🏋️</span>التمارين</button><button class="nav" data-go="myweek"><span>📅</span>جدولي</button><button class="nav" data-go="food"><span>🥗</span>التغذية</button><button class="nav" data-go="progress"><span>📈</span>تقدمي</button>
 </div></nav>
 <dialog id="exerciseDialog"><div class="dialog-top"><h2 id="dialogTitle"></h2><button class="btn secondary" id="closeDialog">إغلاق</button></div><div id="dialogBody"></div></dialog>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -118,6 +142,33 @@ footer{text-align:center;color:#748477;font-size:10px;padding:18px 10px}
 <script src="./firebase-config.js"></script>
 <script>
 const $=id=>document.getElementById(id);
+const PERSONAL_WEEK=[
+{day:1,title:"اليوم الأول",name:"صدر + ظهر + ذراع",type:"train",items:[["Incline Chest Press",3],["Close-Grip Lat Pulldown",2],["Flat Chest Press",2],["T-Bar Row",2],["Chest Cable Fly",2],["Lateral Raises",2],["DB Preacher Curl",2],["Rope Triceps Pushdown",2]]},
+{day:2,title:"اليوم الثاني",name:"راحة",type:"rest",items:[]},
+{day:3,title:"اليوم الثالث",name:"ظهر + أكتاف + ذراع",type:"train",items:[["Kelso Shrugs",2],["Wide-Grip Lat Pulldown",2],["Shoulder Press",2],["Cable Lateral Raises",2],["Rear Butterfly",3],["Single Triceps Cable",2],["Preacher Curl",2],["Overhead Triceps Rope",2]]},
+{day:4,title:"اليوم الرابع",name:"رجل",type:"train",items:[["Seated Leg Curl",3],["Hack Squat",3],["Leg Extension",2],["Romanian Deadlift",2],["Smith Hip Thrust",2],["Adductors Machine",2],["Standing Calf Raises",3],["Vertical Leg Crunch",2]]},
+{day:5,title:"اليوم الخامس",name:"راحة",type:"rest",items:[]},
+{day:6,title:"اليوم السادس",name:"صدر + ظهر + ذراع",type:"train",items:[["T-Bar Machine",2],["Chest Fly Machine",2],["Wide-Grip Lat Pulldown",2],["Smith High Incline Press",2],["Close-Grip Seated Row",2],["Bayesian Curl",2],["Rope Triceps Pushdown",2]]},
+{day:7,title:"اليوم السابع",name:"راحة",type:"rest",items:[]}
+];
+function videoSearch(name){return "https://www.youtube.com/results?search_query="+encodeURIComponent(name+" exercise form demonstration")}
+function renderPersonalWeek(){$("personalWeek").innerHTML=PERSONAL_WEEK.map(d=>d.type==="rest"?'<article class="week-day rest"><h3>'+d.title+' · يوم راحة 🌿</h3><p>استشفاء وراحة ونوم كفاية. مش مطلوب تمرين مقاومة النهارده.</p></article>':'<article class="week-day"><h3>'+d.title+' · '+d.name+'</h3><p>8–12 تكرار · راحة 2–3 دقائق · عدد المجموعات حسب البرنامج</p>'+d.items.map(x=>'<div class="week-ex"><span>'+x[0]+' · '+x[1]+' مجموعات</span><a href="'+videoSearch(x[0])+'" target="_blank" rel="noopener">فيديو شرح ↗</a></div>').join("")+'<button class="btn primary" type="button" data-start-day="'+d.day+'" style="width:100%;margin-top:10px">سجّل تمرين اليوم</button></article>').join("");$("personalWeek").querySelectorAll("[data-start-day]").forEach(b=>b.onclick=()=>{const d=PERSONAL_WEEK.find(x=>x.day===Number(b.dataset.startDay));$("sessionName").value=d.title+" — "+d.name;go("progress")})}
+function escHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+let sessionDraft=[];
+function localDate(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function addSetEditorRow(weight="",reps=""){$("setRows").insertAdjacentHTML("beforeend",'<div class="set-row"><b>مجموعة '+($("setRows").children.length+1)+'</b><input type="number" min="0" step="0.5" placeholder="مثلاً 20" value="'+weight+'" aria-label="وزن المجموعة"><input type="number" min="1" max="100" placeholder="مثلاً 10" value="'+reps+'" aria-label="تكرارات المجموعة"></div>')}
+function readSetEditor(){return [...$("setRows").querySelectorAll(".set-row")].map(row=>{const inputs=row.querySelectorAll("input");return {weight:inputs[0].value===""?null:Number(inputs[0].value),reps:inputs[1].value===""?null:Number(inputs[1].value)}})}
+function renderSessionDraft(){$("sessionDraft").innerHTML=sessionDraft.length?sessionDraft.map((e,i)=>'<div class="draft-ex"><b>'+escHtml(e.name)+'</b>'+e.sets.map((s,j)=>'<div class="history-set">المجموعة '+(j+1)+': '+(s.weight===null?"الوزن غير مسجل":s.weight+" كجم")+' × '+(s.reps??"—")+' تكرار</div>').join("")+'<button type="button" class="btn danger" data-remove-draft="'+i+'">حذف التمرين</button></div>').join(""):'<p class="muted">لسه مضافش تمارين للجلسة.</p>';$("sessionDraft").querySelectorAll("[data-remove-draft]").forEach(b=>b.onclick=()=>{sessionDraft.splice(Number(b.dataset.removeDraft),1);renderSessionDraft()})}
+function addDraftExercise(){const name=$("sessionExercise").value.trim(),sets=readSetEditor();if(!name||!sets.length||sets.some(s=>s.reps===null||!Number.isFinite(s.reps)||s.reps<1||s.weight!==null&&(!Number.isFinite(s.weight)||s.weight<0))){$("logMessage").textContent="اكتب اسم التمرين، وعدد التكرارات لكل مجموعة. الوزن اختياري.";return}sessionDraft.push({name,sets});$("sessionExercise").value="";$("setRows").innerHTML="";addSetEditorRow();renderSessionDraft();$("logMessage").textContent="اتضاف التمرين للجلسة. تقدر تضيف تمرين تاني."}
+function saveWorkoutSession(){const name=$("sessionName").value.trim(),date=$("sessionDate").value,time=$("sessionTime").value;if(!name||!date||!time||!sessionDraft.length){$("logMessage").textContent="اكتب اسم الجلسة والتاريخ والساعة وأضف تمرينًا واحدًا على الأقل.";return}const record={id:Date.now(),name,date,time,createdAt:new Date().toISOString(),exercises:sessionDraft.map(e=>({name:e.name,sets:e.sets.map(s=>({...s}))}))};logs.unshift(record);write("logs",logs);sessionDraft=[];renderSessionDraft();$("sessionName").value="";$("sessionExercise").value="";$("setRows").innerHTML="";addSetEditorRow();$("logMessage").textContent="اتحفظت الجلسة بكل مجموعاتها وتاريخها وساعتها.";renderLogs();updateStats()}
+function renderLogs(){const q=($("historySearch")?.value||"").trim().toLowerCase(),date=$("historyDate")?.value||"";const filtered=logs.filter(l=>(!date||l.date===date)&&(!q||[l.name,...(l.exercises||[]).map(e=>e.name)].join(" ").toLowerCase().includes(q)));$("logsList").innerHTML=filtered.length?filtered.map(l=>{if(Array.isArray(l.exercises)){return '<article class="history-card"><div class="dialog-top"><h4>'+escHtml(l.name)+'</h4><button type="button" class="btn danger" data-del-session="'+l.id+'">حذف</button></div><p>'+escHtml(l.date)+' · '+escHtml(l.time||"وقت غير مسجل")+'</p>'+l.exercises.map(e=>'<div class="draft-ex"><b>'+escHtml(e.name)+'</b>'+e.sets.map((s,i)=>'<div class="history-set">المجموعة '+(i+1)+': '+(s.weight===null||s.weight===""?"—":escHtml(s.weight)+" كجم")+' × '+escHtml(s.reps)+' تكرار</div>').join("")+'</div>').join("")+'</article>'}return '<article class="history-card"><div class="dialog-top"><h4>'+escHtml(l.name)+'</h4><button type="button" class="btn danger" data-del-session="'+l.id+'">حذف</button></div><p>'+escHtml(l.date)+' · سجل قديم</p><p>'+escHtml(l.sets)+' مجموعات × '+escHtml(l.reps)+' تكرار · '+(l.weight?escHtml(l.weight)+' كجم':'الوزن غير مسجل')+'</p></article>'}).join(""):'<p class="muted">مفيش جلسات مطابقة للبحث أو التاريخ.</p>';$("logsList").querySelectorAll("[data-del-session]").forEach(b=>b.onclick=()=>{if(confirm("تحذف الجلسة دي من الأرشيف؟")){logs=logs.filter(l=>String(l.id)!==b.dataset.delSession);write("logs",logs);renderLogs();updateStats()}})}
+$("addSetRow").onclick=()=>addSetEditorRow();
+$("addExerciseToSession").onclick=addDraftExercise;
+$("saveWorkoutSession").onclick=saveWorkoutSession;
+$("historySearch").addEventListener("input",renderLogs);
+$("historyDate").addEventListener("change",renderLogs);
+$("sessionDate").value=localDate();$("sessionTime").value=new Date().toTimeString().slice(0,5);addSetEditorRow();renderSessionDraft();
+
 const EXERCISES=[
 {id:"chest-press",name:"ضغط صدر بالماكينة",muscle:"صدر",tool:"ماكينة",icon:"🏋️",desc:"تمرين للعضلات الأمامية للصدر، والماكينة بتساعدك تثبت مسار الحركة.",steps:["ظبط الكرسي بحيث المقابض تبقى في مستوى منتصف الصدر تقريبًا.","اسند ضهرك وخلي رجليك ثابتة على الأرض.","ادفع لقدام بهدوء من غير قفل مفصل الكوع بعنف.","ارجع ببطء لحد مدى حركة مريح من غير ما تزق كتفك لورا زيادة."],tip:"ابدأ بمقاومة خفيفة واتأكد إن الكرسي مناسب لطولك."},
 {id:"pushup",name:"ضغط أرضي",muscle:"صدر",tool:"وزن الجسم",icon:"🤸",desc:"تمرين بوزن الجسم بيشغل الصدر والكتف الأمامي والترايسبس.",steps:["حط إيديك أوسع شوية من عرض الكتفين.","خلي جسمك في خط واحد من الرأس للكعب.","انزل بتحكم وخلي الكوع بزاوية مريحة.","ادفع الأرض وارجع لوضع البداية. ممكن تبدأ على سطح مرتفع لو صعب."],tip:"لو حسيت بألم في الرسغ أو الكتف، وقف وعدّل الوضع أو اختار بديل مناسب."},
@@ -156,21 +207,18 @@ let activeMuscle="الكل",logs=read("logs",[]),plans=read("plans",[]);
 window.__gymCoachLoadLocalScope=function(scope){window.GYMCOACH_STORAGE_SCOPE=scope||"guest";logs=read("logs",[]);plans=read("plans",[]);renderLogs();updateStats()};
 window.__gymCoachApplyCloudData=function(data){window.__gymCoachApplyingCloud=true;logs=Array.isArray(data.logs)?data.logs:[];plans=Array.isArray(data.plans)?data.plans:[];localStorage.setItem(storageKey("logs"),JSON.stringify(logs));localStorage.setItem(storageKey("plans"),JSON.stringify(plans));window.__gymCoachApplyingCloud=false;renderLogs();updateStats()};
 window.__gymCoachGetData=()=>({logs,plans});
-function go(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b.dataset.go===id));window.scrollTo({top:0,behavior:"smooth"});if(id==="progress")renderLogs();if(id==="exercises")renderExercises();if(id==="equipment")renderEquipment();updateStats()}
+function go(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b.dataset.go===id));window.scrollTo({top:0,behavior:"smooth"});if(id==="progress")renderLogs();if(id==="myweek")renderPersonalWeek();if(id==="exercises")renderExercises();if(id==="equipment")renderEquipment();updateStats()}
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>go(b.dataset.go)));
 const muscles=["الكل","صدر","ظهر","كتف","رجل","ذراع","بطن"];
 function renderChips(){ $("muscleChips").innerHTML=muscles.map(m=>'<button class="'+(activeMuscle===m?'active':'')+'" data-muscle="'+m+'">'+m+'</button>').join("");$("muscleChips").querySelectorAll("button").forEach(b=>b.onclick=()=>{activeMuscle=b.dataset.muscle;renderChips();renderExercises()})}
 function renderExercises(){const q=$("exerciseSearch").value.trim().toLowerCase();const items=EXERCISES.filter(e=>(activeMuscle==="الكل"||e.muscle===activeMuscle)&&[e.name,e.muscle,e.tool].some(x=>x.toLowerCase().includes(q)));$("exerciseList").innerHTML=items.length?items.map(e=>'<article class="exercise"><div class="exercise-icon">'+e.icon+'</div><div><h3>'+e.name+'</h3><p>'+e.muscle+' · '+e.tool+'</p></div><button class="btn secondary" data-ex="'+e.id+'">اتعلم</button></article>').join(""):'<div class="panel muted">مفيش نتائج مطابقة. جرّب كلمة تانية.</div>';$("exerciseList").querySelectorAll("[data-ex]").forEach(b=>b.onclick=()=>openExercise(b.dataset.ex));$("exerciseOptions").innerHTML=EXERCISES.map(e=>'<option value="'+e.name+'">').join("")}
-function openExercise(id){const e=EXERCISES.find(x=>x.id===id);if(!e)return;$("dialogTitle").textContent=e.icon+" "+e.name;$("dialogBody").innerHTML='<p class="muted">'+e.desc+'</p><span class="tag">'+e.muscle+'</span><span class="tag">'+e.tool+'</span><h3>الطريقة خطوة بخطوة</h3><ol class="steps">'+e.steps.map(s=>'<li>'+s+'</li>').join("")+'</ol><div class="notice">نصيحة الكابتن: '+e.tip+'</div><p class="muted">الشرح نصي تعليمي. أول مرة تستخدم جهاز، اطلب من مدرب المكان يراجع ضبطه ووضع جسمك.</p>';$("exerciseDialog").showModal()}
+function openExercise(id){const e=EXERCISES.find(x=>x.id===id);if(!e)return;$("dialogTitle").textContent=e.icon+" "+e.name;$("dialogBody").innerHTML='<p class="muted">'+e.desc+'</p><span class="tag">'+e.muscle+'</span><span class="tag">'+e.tool+'</span><p><a class="video-link" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+encodeURIComponent(e.name+" exercise form demonstration")+'">▶ ابحث عن فيديو شرح للتمرين</a></p><h3>الطريقة خطوة بخطوة</h3><ol class="steps">'+e.steps.map(s=>'<li>'+s+'</li>').join("")+'</ol><div class="notice">نصيحة الكابتن: '+e.tip+'</div><p class="muted">أول مرة تستخدم جهاز، اطلب من مدرب المكان يراجع ضبطه ووضع جسمك.</p>';$("exerciseDialog").showModal()}
 $("closeDialog").onclick=()=>$("exerciseDialog").close();$("exerciseSearch").addEventListener("input",renderExercises);
 function planTemplate(days,level){const base=[{name:"ضغط صدر بالماكينة",sets:"2–3",reps:"8–12"},{name:"سحب عالي",sets:"2–3",reps:"8–12"},{name:"ضغط رجل",sets:"2–3",reps:"10–12"},{name:"ضغط كتف",sets:"2",reps:"8–12"},{name:"بلانك",sets:"2",reps:"15–30 ثانية"}];const split={2:[["تمرين جسم كامل A",base.slice(0,3)],["تمرين جسم كامل B",base.slice(2)]],3:[["جسم كامل A",base],["جسم كامل B",base.slice().reverse()],["جسم كامل C",base.slice(1)]],4:[["جزء علوي A",base.slice(0,2).concat(base[3])],["جزء سفلي A",base.slice(2,3).concat(base[4])],["جزء علوي B",base.slice(0,2).concat(base[3])],["جزء سفلي B",base.slice(2)]],5:[["جسم كامل خفيف",base.slice(0,3)],["جزء علوي",base.slice(0,2).concat(base[3])],["جزء سفلي",base.slice(2)],["راحة نشطة / حركة",[{name:"مشي مريح أو حركة خفيفة",sets:"1",reps:"حسب القدرة"}]],["جسم كامل",base]]};return split[days].map((d,i)=>({name:"اليوم "+(i+1)+" · "+d[0],items:d[1].map(x=>({...x}))}))}
 let currentPlan=null;
 $("buildPlan").onclick=()=>{const days=Number($("days").value),level=$("level").value,goal=$("goal").value,duration=$("duration").value;currentPlan={days,level,goal,duration,workouts:planTemplate(days,level)};$("planIntro").textContent="مستواك: "+({beginner:"مبتدئ",intermediate:"متوسط",advanced:"متقدم"}[level])+" · عدد الأيام: "+days+" · الهدف: "+({fitness:"لياقة عامة",strength:"تحسين القوة",muscle:"بناء العضلات"}[goal])+" · وقت التمرينة: "+duration+" دقيقة";$("planDays").innerHTML=currentPlan.workouts.map(d=>'<div class="plan-day"><h4>'+d.name+'</h4><ul>'+d.items.map(x=>'<li>'+x.name+' — '+x.sets+' مجموعات × '+x.reps+'</li>').join("")+'</ul></div>').join("");$("planResult").classList.remove("hidden")};
 $("savePlan").onclick=()=>{if(!currentPlan)return;plans.unshift({...currentPlan,savedAt:new Date().toISOString()});write("plans",plans);updateStats();$("savePlan").textContent="اتحفظ ✓"};
-$("logDate").value=new Date().toISOString().slice(0,10);
-$("addLog").onclick=()=>{const name=$("logExercise").value.trim(),sets=Number($("logSets").value),reps=Number($("logReps").value),weight=$("logWeight").value,date=$("logDate").value;if(!name||!sets||!reps||!date){$("logMessage").textContent="اكتب اسم التمرين والمجموعات والتكرارات والتاريخ.";return}logs.unshift({id:Date.now(),name,sets,reps,weight,date});write("logs",logs);$("logMessage").textContent="اتسجلت التمرينة بنجاح على الجهاز ده."; $("logExercise").value="";$("logWeight").value="";renderLogs();updateStats()};
-function renderLogs(){$("logsList").innerHTML=logs.length?logs.slice(0,30).map(l=>'<div class="plan-day"><div class="dialog-top"><b>'+l.name+'</b><small class="muted">'+l.date+'</small></div><p class="muted">'+l.sets+' مجموعات × '+l.reps+' تكرار'+(l.weight?' · '+l.weight+' كجم':'')+'</p><button class="btn danger" data-del="'+l.id+'">حذف التسجيل</button></div>').join(""):'لسه مفيش تسجيلات.';$("logsList").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{logs=logs.filter(l=>l.id!==Number(b.dataset.del));write("logs",logs);renderLogs();updateStats()})}
-$("clearLogs").onclick=()=>{if(confirm("متأكد إنك عايز تمسح سجل التمرين من الجهاز؟")){logs=[];write("logs",logs);renderLogs();updateStats()}};
+$("clearLogs")?.remove();
 function updateStats(){$("statLogs").textContent=logs.length;$("statExercises").textContent=EXERCISES.length;$("statPlans").textContent=plans.length}
 function answer(q){const s=q.toLowerCase();if(/مبتدئ|ابدأ|أول مرة/.test(s))return"ابدأ بهدوء يا بطل. اتعلم ضبط الأجهزة والحركات الأساسية، وخلي أول فترة هدفها فهم الحركة وبناء عادة منتظمة. اطلب من مدرب الجيم يراجع وضعك، ومتستعجلش في زيادة الأوزان.";if(/تسخين|إحماء|warm/.test(s))return"التسخين يعني تجهّز جسمك قبل التمرين: حركة خفيفة كام دقيقة، وبعدها حركات بسيطة للمفاصل والعضلات اللي هتتمرنها. خليه تدريجي ومن غير إجهاد.";if(/جهاز|أجهزة/.test(s))return"قبل استخدام أي جهاز، ظبط الكرسي ومحور الحركة حسب جسمك، ابدأ بأقل مقاومة مناسبة، واقرأ تعليمات الجهاز. أول مرة؟ خلي مدرب المكان يوريك الإعداد الصحيح.";if(/سوبر ?سيت|superset/.test(s))return"السوبر سيت هو أداء تمرينين ورا بعض مع راحة قليلة أو من غير راحة بينهما. مش مناسب لكل الناس أو كل الأهداف؛ اتعلم أداء كل تمرين كويس الأول.";if(/دروب ?سيت|drop ?set/.test(s))return"الدروب سيت أسلوب بتقلل فيه المقاومة بعد ما توصل لإجهاد في المجموعة وتكمل بتكرارات إضافية. مش ضروري للمبتدئ، واستخدامه يكون بحذر ومن غير الوصول لفشل مؤلم.";if(/ألم|وجع|إصابة/.test(s))return"لو فيه ألم حاد أو مستمر، وقف التمرين ومتضغطش على نفسك. استشير طبيب أو أخصائي علاج طبيعي، ومتعتبرش الألم علامة إن التمرين شغال.";if(/بروتين|أكل|تغذية/.test(s))return"خلي أكلك متنوع: مصدر بروتين، نشويات، خضار أو فاكهة، ودهون مفيدة. احتياج كل شخص مختلف، فبلاش مكملات أو نظام قاسي من غير مختص.";if(/راحة|نوم/.test(s))return"الراحة جزء من التدريب. نام كويس، وسيب وقت تعافي بين التمرينات الشديدة لنفس العضلات، وعدّل الجدول لو حاسس بإرهاق مستمر.";return"أقدر أساعدك بمعلومات عن التمارين والأجهزة والتسخين والمصطلحات والتغذية العامة. اكتب اسم التمرين أو سؤالك بشكل أوضح، ولو الموضوع إصابة أو حالة صحية اسأل مختص."}
 function sendChat(q){const box=$("chatbox");const u=document.createElement("div");u.className="bubble user";u.textContent=q;box.appendChild(u);const b=document.createElement("div");b.className="bubble bot";b.textContent=answer(q);box.appendChild(b);box.scrollTop=box.scrollHeight}
